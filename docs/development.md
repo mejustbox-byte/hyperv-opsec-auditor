@@ -19,3 +19,9 @@ CI на Ubuntu и Windows hosted runners запускает offline тесты, 
 Тесты имеют pass/fail/unknown/not_run сценарии, malformed inputs, JSON Schema parity, state/freshness и output safety. Нулевой test run не допускается как readiness. `tools/build_release.py` готовит wheel/sdist, copies synthetic examples/schema/release notes и SHA256SUMS; `tools/package_smoke.py` проверяет повторную сборку из sdist и install-only runtime без сторонних пакетов. Эти команды не публикуют release.
 
 Перед commit: diff review и pattern secret scan, который не является гарантией отсутствия любых секретов. Реальные отчеты/evidence хранить вне checkout; игнорируемый reports/ не защищает от force-add. Проверки и публикация описываются по фактическому результату, local success не заменяет remote CI.
+
+## Prerelease delivery
+
+`.github/workflows/release.yml` is manually dispatched only on `main`. It checks out the exact dispatch SHA, verifies the package version, runs the offline tests/checks/build/clean-install smoke and publishes `v0.1.0a1` with all `dist/` assets. Only its publish job has contents:write; the GitHub-issued short-lived token is supplied only to the publish step, never stored in source. Checkout does not persist credentials. A rerun can replace this version's assets only if its existing tag resolves to the same source SHA; a mismatched tag stops publication.
+
+Cloud `gh` upload authentication can differ from Git/API access. Use the Actions workflow through an authorized GitHub connection rather than extracting or copying credentials. No production credentials are needed. This publishes a GitHub prerelease, not the cloud environment; environment draft review/publication remains a separate product operation.

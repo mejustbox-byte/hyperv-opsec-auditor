@@ -1,0 +1,62 @@
+name: Publish verified alpha
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: publish-alpha
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Verify source and locked installation
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python -m pip install --require-hashes --only-binary=:all: -r requirements-dev.lock
+          python -m pip install --no-build-isolation --no-deps -e .
+          test "$(hyperv-opsec-auditor --version)" = "0.1.0a1"
+      - name: Test the exact release source
+        run: |
+          set -euo pipefail
+          python -m coverage run --source=hyperv_opsec_auditor -m unittest discover -s tests -v
+          python -m coverage report --fail-under=85
+          python tools/validate_docs.py
+          python tools/scan_secrets.py
+          python tools/build_release.py
+          python tools/package_smoke.py
+      - name: Publish prerelease and assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cp CHANGELOG.md /tmp/release-notes.md
+          cat >> /tmp/release-notes.md <<NOTES
+
+          ## Verified publication source
+
+          Commit: $GITHUB_SHA
+          Release build/test/install run: https://github.com/$GH_REPO/actions/runs/$GITHUB_RUN_ID
+          This run tests only offline Python with synthetic evidence. Real Windows Server Hyper-V/HGS/backup/recovery tests are NOT RUN.
+          NOTES
+          if gh release view v0.1.0a1 >/dev/null 2>&1; then
+            git fetch --depth=1 origin refs/tags/v0.1.0a1
+            test "$(git rev-parse 'FETCH_HEAD^{commit}')" = "$GITHUB_SHA"
+            gh release upload v0.1.0a1 dist/* --clobber
+            gh release edit v0.1.0a1 --draft=false --prerelease --notes-file /tmp/release-notes.md
+          else
+            gh release create v0.1.0a1 --target "$GITHUB_SHA" --prerelease --title "0.1.0a1 — offline Hyper-V auditor alpha" --notes-file /tmp/release-notes.md dist/*
+          fi
