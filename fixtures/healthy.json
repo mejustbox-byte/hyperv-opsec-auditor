@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "synthetic": true,
+  "scope": "fictional-lab",
+  "collected_at": "2026-10-09T00:00:00Z",
+  "evidence_source": "fictional-review",
+  "host": {
+    "state": "ok",
+    "hyperv_role_enabled": true,
+    "supported_configuration": true,
+    "supported_build": true,
+    "security_updates_current": true
+  },
+  "administration": {
+    "state": "ok",
+    "actual_admins": [
+      "lab-admin"
+    ],
+    "approved_admins": [
+      "lab-admin"
+    ],
+    "effective_rights_reviewed": true,
+    "separate_management_accounts": true,
+    "management_network_isolated": true
+  },
+  "winrm": {
+    "state": "ok",
+    "enabled": true,
+    "https_only": true,
+    "certificate_valid": true,
+    "basic_auth_enabled": false,
+    "allow_unencrypted": false,
+    "firewall_scoped": true,
+    "delegation_restricted": true
+  },
+  "network": {
+    "state": "ok",
+    "topology_reviewed": true,
+    "inventory_complete": true,
+    "adapters": [
+      {
+        "id": "nic-demo",
+        "switch_type": "internal",
+        "expected_switch_type": "internal",
+        "vlans": [
+          42
+        ],
+        "allowed_vlans": [
+          42
+        ],
+        "trunk": false,
+        "allow_trunk": false,
+        "sriov": false,
+        "allow_sriov": false
+      }
+    ]
+  },
+  "virtual_machines": {
+    "state": "ok",
+    "inventory_complete": true,
+    "vms": [
+      {
+        "id": "vm-demo",
+        "generation": 2,
+        "profile_supported": true,
+        "require_secure_boot": true,
+        "secure_boot_enabled": true,
+        "secure_boot_template_approved": true,
+        "require_vtpm": true,
+        "vtpm_enabled": true,
+        "require_shielding": true,
+        "shielded": true,
+        "key_protector_valid": true,
+        "hgs_attestation_valid": true
+      }
+    ]
+  },
+  "storage": {
+    "state": "ok",
+    "inventory_complete": true,
+    "assets": [
+      {
+        "id": "disk-demo",
+        "effective_acl_reviewed": true,
+        "unapproved_principals": [],
+        "encrypted": true,
+        "require_encryption": true
+      }
+    ]
+  },
+  "backup": {
+    "state": "ok",
+    "independent_copy": true,
+    "immutable_or_offline": true,
+    "separate_identity": true,
+    "checkpoint_only": false
+  },
+  "logging": {
+    "state": "ok",
+    "audit_enabled": true,
+    "central_delivery_verified": true,
+    "tamper_protection": true,
+    "retention_days": 90,
+    "required_retention_days": 30
+  },
+  "recovery": {
+    "state": "ok",
+    "runbook_reviewed": true,
+    "drill_performed_at": "2026-10-01T00:00:00Z",
+    "integrity_verified": true,
+    "isolated_restore": true,
+    "reviewer_approved": true,
+    "measured_rpo_hours": 1,
+    "target_rpo_hours": 4,
+    "measured_rto_hours": 2,
+    "target_rto_hours": 8
+  }
+}

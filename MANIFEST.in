@@ -1,0 +1,12 @@
+recursive-include docs *.md
+recursive-include fixtures *.json
+recursive-include examples *.json *.md
+recursive-include tests *.py
+recursive-include tools *.py
+include requirements-dev.lock
+include requirements-dev.txt
+include SECURITY.md
+include CHANGELOG.md
+include VALIDATION.md
+recursive-include tools *.sh
+recursive-include .github *.yml

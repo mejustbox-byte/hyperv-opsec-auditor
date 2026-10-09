@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "synthetic": true,
+  "scope": "fictional-lab",
+  "collected_at": "2026-10-09T00:00:00Z",
+  "evidence_source": "fictional-review",
+  "winrm": {
+    "state": "error"
+  },
+  "virtual_machines": {
+    "state": "ok",
+    "inventory_complete": true,
+    "vms": [
+      {
+        "id": "vm-legacy",
+        "generation": 1,
+        "profile_supported": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,410 @@
+{
+  "as_of": "2026-10-09T00:00:00Z",
+  "collected_at": "2026-10-09T00:00:00Z",
+  "evidence_source": "fictional-review",
+  "findings": [
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/host/hyperv_role_enabled"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/host/supported_configuration"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/host/supported_build"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/host/security_updates_current"
+        }
+      ],
+      "rationale": "All required supplied evidence for this rule matches the baseline.",
+      "remediation": "Review the supported host/build profile, enable the approved Hyper-V role and apply approved security updates.",
+      "rule_id": "HV-01",
+      "severity": "high",
+      "status": "pass",
+      "title": "Host support and updates"
+    },
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/administration/effective_rights_reviewed"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/administration/separate_management_accounts"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/administration/management_network_isolated"
+        },
+        {
+          "expected": [
+            "lab-admin"
+          ],
+          "expected_pointer": "/administration/approved_admins",
+          "observed": [
+            "lab-admin",
+            "unexpected-admin"
+          ],
+          "pointer": "/administration/actual_admins"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: unapproved administrators.",
+      "remediation": "Review effective administrator rights, remove unapproved grants through an authorized change, and separate management accounts and networks.",
+      "rule_id": "HV-02",
+      "severity": "critical",
+      "status": "fail",
+      "title": "Management privileges"
+    },
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/winrm/enabled"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/winrm/https_only"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/winrm/certificate_valid"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/winrm/firewall_scoped"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/winrm/delegation_restricted"
+        },
+        {
+          "expected": false,
+          "observed": false,
+          "pointer": "/winrm/basic_auth_enabled"
+        },
+        {
+          "expected": false,
+          "observed": true,
+          "pointer": "/winrm/allow_unencrypted"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: allow_unencrypted.",
+      "remediation": "Review HTTPS/certificate, disable Basic and unencrypted management, restrict firewall scope and delegation through an authorized change.",
+      "rule_id": "HV-03",
+      "severity": "high",
+      "status": "fail",
+      "title": "WinRM management security"
+    },
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/network/topology_reviewed"
+        },
+        {
+          "expected": "internal",
+          "expected_pointer": "/network/adapters/0/expected_switch_type",
+          "observed": "internal",
+          "pointer": "/network/adapters/0/switch_type"
+        },
+        {
+          "expected": [
+            42
+          ],
+          "expected_pointer": "/network/adapters/0/allowed_vlans",
+          "observed": [
+            99
+          ],
+          "pointer": "/network/adapters/0/vlans"
+        },
+        {
+          "expected": false,
+          "expected_pointer": "/network/adapters/0/allow_trunk",
+          "observed": false,
+          "pointer": "/network/adapters/0/trunk"
+        },
+        {
+          "expected": false,
+          "expected_pointer": "/network/adapters/0/allow_sriov",
+          "observed": false,
+          "pointer": "/network/adapters/0/sriov"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: VLAN outside approved scope or empty VLAN set.",
+      "remediation": "Review the approved topology, VLAN allowlist, switch type, trunk and SR-IOV exceptions; validate isolation in the lab.",
+      "rule_id": "HV-04",
+      "severity": "high",
+      "status": "fail",
+      "title": "Virtual network isolation"
+    },
+    {
+      "asset": "vm-demo",
+      "evidence": [
+        {
+          "observed": 2,
+          "pointer": "/virtual_machines/vms/0/generation"
+        },
+        {
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/profile_supported"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/require_secure_boot"
+        },
+        {
+          "expected": true,
+          "observed": false,
+          "pointer": "/virtual_machines/vms/0/secure_boot_enabled"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/secure_boot_template_approved"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: secure_boot_enabled.",
+      "remediation": "For supported generation 2 profiles, enable the approved Secure Boot trust template through a reviewed change.",
+      "rule_id": "HV-05",
+      "severity": "high",
+      "status": "fail",
+      "title": "VM Secure Boot"
+    },
+    {
+      "asset": "vm-demo",
+      "evidence": [
+        {
+          "observed": 2,
+          "pointer": "/virtual_machines/vms/0/generation"
+        },
+        {
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/profile_supported"
+        },
+        {
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/require_vtpm"
+        },
+        {
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/require_shielding"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/vtpm_enabled"
+        },
+        {
+          "expected": true,
+          "observed": false,
+          "pointer": "/virtual_machines/vms/0/shielded"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/key_protector_valid"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/virtual_machines/vms/0/hgs_attestation_valid"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: shielded.",
+      "remediation": "Review vTPM requirements separately from shielding; verify key protection and HGS trust in a supported lab.",
+      "rule_id": "HV-06",
+      "severity": "high",
+      "status": "fail",
+      "title": "VM TPM and shielding"
+    },
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/storage/assets/0/effective_acl_reviewed"
+        },
+        {
+          "expected": [],
+          "observed": [
+            "broad-access"
+          ],
+          "pointer": "/storage/assets/0/unapproved_principals"
+        },
+        {
+          "observed": true,
+          "pointer": "/storage/assets/0/require_encryption"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/storage/assets/0/encrypted"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: unapproved_principals.",
+      "remediation": "Review effective VHDX/checkpoint/config/backup access, remove unapproved principals and enforce approved encryption.",
+      "rule_id": "HV-07",
+      "severity": "critical",
+      "status": "fail",
+      "title": "Virtual storage protection"
+    },
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/backup/independent_copy"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/backup/immutable_or_offline"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/backup/separate_identity"
+        },
+        {
+          "expected": false,
+          "observed": true,
+          "pointer": "/backup/checkpoint_only"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: checkpoint_only.",
+      "remediation": "Use independent immutable or offline copies and separate backup identities. Checkpoints are not backups.",
+      "rule_id": "HV-08",
+      "severity": "critical",
+      "status": "fail",
+      "title": "Independent protected backups"
+    },
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/logging/audit_enabled"
+        },
+        {
+          "expected": true,
+          "observed": false,
+          "pointer": "/logging/central_delivery_verified"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/logging/tamper_protection"
+        },
+        {
+          "expected": 30,
+          "expected_pointer": "/logging/required_retention_days",
+          "observed": 90,
+          "pointer": "/logging/retention_days"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: central_delivery_verified.",
+      "remediation": "Enable approved auditing, validate central delivery and tamper protection, and meet the required retention period.",
+      "rule_id": "HV-09",
+      "severity": "medium",
+      "status": "fail",
+      "title": "Audit logging"
+    },
+    {
+      "asset": "fictional-lab",
+      "evidence": [
+        {
+          "observed": "2026-10-01T00:00:00Z",
+          "pointer": "/recovery/drill_performed_at"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/recovery/runbook_reviewed"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/recovery/integrity_verified"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/recovery/isolated_restore"
+        },
+        {
+          "expected": true,
+          "observed": true,
+          "pointer": "/recovery/reviewer_approved"
+        },
+        {
+          "expected": 4,
+          "expected_pointer": "/recovery/target_rpo_hours",
+          "observed": 1,
+          "pointer": "/recovery/measured_rpo_hours"
+        },
+        {
+          "expected": 8,
+          "expected_pointer": "/recovery/target_rto_hours",
+          "observed": 10,
+          "pointer": "/recovery/measured_rto_hours"
+        }
+      ],
+      "rationale": "Evidence violates the baseline: RTO exceeds target.",
+      "remediation": "Perform an authorized isolated restore drill without malware; verify integrity and document measured RPO/RTO, reviewer and runbook.",
+      "rule_id": "HV-10",
+      "severity": "critical",
+      "status": "fail",
+      "title": "Verified recovery readiness"
+    }
+  ],
+  "limitations": [
+    "Offline evaluation of supplied evidence; no live Hyper-V, WinRM, network or backup access.",
+    "Support, effective rights, isolation and restore attestations are supplied by the evidence owner, not independently verified.",
+    "Synthetic results do not validate real infrastructure. Actual Windows Hyper-V/HGS and recovery tests are NOT RUN.",
+    "No configuration changes or remediation are executed. Reports can contain sensitive pseudonymous evidence."
+  ],
+  "policy": {
+    "excluded_rules": [],
+    "max_evidence_age_days": 30,
+    "max_restore_age_days": 90
+  },
+  "policy_version": "mvp-baseline-1.0",
+  "schema_version": "1.0",
+  "scope": "fictional-lab",
+  "summary": {
+    "fail": 9,
+    "not_run": 0,
+    "pass": 1,
+    "unknown": 0
+  },
+  "synthetic": true,
+  "tool_version": "0.1.0a1"
+}

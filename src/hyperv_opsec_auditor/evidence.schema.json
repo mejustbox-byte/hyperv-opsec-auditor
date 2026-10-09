@@ -1,0 +1,670 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mejustbox-byte/hyperv-opsec-auditor/evidence-1.0.schema.json",
+  "title": "Hyper-V offline evidence 1.0",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "scope": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+      "maxLength": 64,
+      "minLength": 1
+    },
+    "collected_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$(?![\\s\\S])",
+      "maxLength": 20
+    },
+    "evidence_source": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+      "maxLength": 64,
+      "minLength": 1
+    },
+    "host": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "hyperv_role_enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "supported_configuration": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "supported_build": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "security_updates_current": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "administration": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "actual_admins": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "maxItems": 1000,
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "approved_admins": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "maxItems": 1000,
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "effective_rights_reviewed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "separate_management_accounts": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "management_network_isolated": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "winrm": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "https_only": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "certificate_valid": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "basic_auth_enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "allow_unencrypted": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "firewall_scoped": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "delegation_restricted": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "network": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "topology_reviewed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "inventory_complete": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "adapters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+                "maxLength": 64,
+                "minLength": 1
+              },
+              "switch_type": {
+                "type": "string",
+                "enum": [
+                  "external",
+                  "internal",
+                  "private"
+                ]
+              },
+              "expected_switch_type": {
+                "type": "string",
+                "enum": [
+                  "external",
+                  "internal",
+                  "private"
+                ]
+              },
+              "vlans": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4094
+                },
+                "maxItems": 1000,
+                "minItems": 0,
+                "uniqueItems": true
+              },
+              "allowed_vlans": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4094
+                },
+                "maxItems": 1000,
+                "minItems": 0,
+                "uniqueItems": true
+              },
+              "trunk": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "allow_trunk": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "sriov": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "allow_sriov": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 1000,
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "virtual_machines": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "inventory_complete": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "vms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+                "maxLength": 64,
+                "minLength": 1
+              },
+              "generation": {
+                "type": "integer",
+                "enum": [
+                  1,
+                  2
+                ]
+              },
+              "profile_supported": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "require_secure_boot": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "secure_boot_enabled": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "secure_boot_template_approved": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "require_vtpm": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "vtpm_enabled": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "require_shielding": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "shielded": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "key_protector_valid": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "hgs_attestation_valid": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "generation"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 1000,
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "storage": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "inventory_complete": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+                "maxLength": 64,
+                "minLength": 1
+              },
+              "effective_acl_reviewed": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "unapproved_principals": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
+                  "maxLength": 64,
+                  "minLength": 1
+                },
+                "maxItems": 1000,
+                "minItems": 0,
+                "uniqueItems": true
+              },
+              "encrypted": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "require_encryption": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 1000,
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "backup": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "independent_copy": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "immutable_or_offline": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "separate_identity": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "checkpoint_only": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "logging": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "audit_enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "central_delivery_verified": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "tamper_protection": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "retention_days": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 3650
+        },
+        "required_retention_days": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 3650
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "recovery": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "not_collected"
+          ]
+        },
+        "runbook_reviewed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "drill_performed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$(?![\\s\\S])",
+          "maxLength": 20
+        },
+        "integrity_verified": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "isolated_restore": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "reviewer_approved": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "measured_rpo_hours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "target_rpo_hours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "measured_rto_hours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "target_rto_hours": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "synthetic",
+    "scope",
+    "collected_at",
+    "evidence_source"
+  ],
+  "additionalProperties": false
+}
