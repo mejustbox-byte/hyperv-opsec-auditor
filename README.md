@@ -1,12 +1,12 @@
 # hyperv-opsec-auditor
 
-Read-only **offline** Hyper-V security posture auditing from supplied JSON evidence. Version `0.1.0a1` is an alpha/prerelease: no live Windows collector, no host connections and no automatic remediation.
+Аудитор состояния защиты Hyper-V **только для чтения**, работающий автономно с предоставленными данными JSON. Версия `0.1.0a2` — предварительный выпуск: сбор данных с Windows, подключение к хостам и автоматическое исправление настроек не реализованы.
 
-Covers supplied evidence for host support/updates, management privileges, WinRM, VM/vSwitch/VLAN isolation, Secure Boot/vTPM/shielding, VHDX/checkpoint/backup protection, audit logging and verified recovery readiness. A pass means the supplied evidence matches the baseline, not that infrastructure was independently inspected. Real Hyper-V/HGS/restore tests are **NOT RUN**.
+Проверяются предоставленные сведения о поддерживаемости хоста и обновлениях, правах управления, WinRM, изоляции VM/vSwitch/VLAN, Secure Boot/vTPM/Shielded VM, защите VHDX/контрольных точек/резервных копий, журналировании и проверенном восстановлении. Статус `pass` означает соответствие предоставленных данных базовой политике, а не независимую проверку инфраструктуры. Реальные испытания Hyper-V/HGS и восстановления **НЕ ВЫПОЛНЕНЫ**.
 
-## Install and run
+## Установка и запуск
 
-Python 3.12 or newer. Runtime has no third-party dependencies. From the source checkout:
+Требуется Python 3.12 или новее. Сторонних зависимостей для выполнения нет. Из рабочей копии исходников:
 
 ```bash
 python3 -m venv .venv
@@ -17,9 +17,9 @@ python3 -m venv .venv
 .venv/bin/hyperv-opsec-auditor audit fixtures/unsafe.json --as-of 2026-10-09T00:00:00Z --format json --fail-on fail
 ```
 
-The final command intentionally exits 1. The fixtures are fictional. A fixed `--as-of` makes this demonstration repeatable; omit it to use current UTC for real supplied evidence. See [user guide](docs/user-guide.md) for Windows, wheel/offline installation, status/exit codes and input preparation.
+Последняя команда намеренно завершается с кодом 1. Все примеры вымышлены. Фиксированный `--as-of` делает демонстрацию воспроизводимой; для реальных предоставленных данных опустите его, чтобы использовать текущее UTC. [Руководство пользователя](docs/user-guide.md) содержит команды для Windows, установку wheel без сети, описание статусов, кодов завершения и подготовки данных.
 
-## Validation and development
+## Проверки и разработка
 
 ```bash
 .venv/bin/python -m unittest discover -s tests -v
@@ -29,4 +29,37 @@ The final command intentionally exits 1. The fixtures are fictional. A fixed `--
 .venv/bin/python tools/package_smoke.py
 ```
 
-[Project documentation](docs/README.md) includes requirements, threat model, architecture, ADR, rule matrix, [MVP plan](docs/mvp-plan.md) and [Windows lab procedure](docs/lab.md). CI uses synthetic data on hosted runners, including Windows offline Python tests; this is not Hyper-V platform validation. Do not put real credentials or raw production evidence in this public repository.
+[Документация проекта](docs/README.md): требования, модель угроз, архитектура, ADR, матрица правил, [план MVP](docs/mvp-plan.md) и [лабораторная процедура Windows](docs/lab.md). CI использует синтетические данные на предоставленных GitHub исполнителях, включая автономные тесты Python на Windows; это не проверка платформы Hyper-V. Не помещайте реальные секреты и необработанные производственные данные в публичный репозиторий. [Правила участия](CONTRIBUTING.md).
+
+## Полный индекс документации
+
+| Раздел | Самостоятельный документ | Дополнительные материалы |
+|---|---|---|
+| Назначение и границы | [README](README.md) | [Требования](docs/requirements.md) |
+| Компоненты и поток | [ARCHITECTURE](ARCHITECTURE.md) | [Архитектура MVP](docs/architecture.md) |
+| Стек и точные версии | [TECH-STACK](TECH-STACK.md) | [ADR](docs/adr/0001-stack.md) |
+| Установка/проверка/удаление | [INSTALL](INSTALL.md) | [Руководство](docs/user-guide.md) |
+| Разработка и review | [CONTRIBUTING](CONTRIBUTING.md) | [Разработка/CI](docs/development.md) |
+| Этапы и приемка | [ROADMAP](ROADMAP.md) | [План MVP](docs/mvp-plan.md) |
+| Угрозы и безопасность | [THREAT-MODEL](THREAT-MODEL.md), [SECURITY](SECURITY.md) | [Подробная модель](docs/threat-model.md) |
+| CLI/JSON/библиотека | [CORE-CONTRACT](CORE-CONTRACT.md) | [Вход](docs/input-contract.md), [правила](docs/check-matrix.md) |
+| Эксплуатация/ошибки/приватность | [RUNBOOK](RUNBOOK.md) | [Руководство](docs/user-guide.md) |
+| Облачная установка/публикация/восстановление | [CLOUD-DEVELOPMENT](CLOUD-DEVELOPMENT.md) | [Среда](docs/environment.md) |
+| Локальный Windows стенд | [LOCAL-PC](LOCAL-PC.md) | [Лаборатория](docs/lab.md) |
+| Фактические проверки | [VERIFICATION](VERIFICATION.md), [VALIDATION](VALIDATION.md) | [CI](https://github.com/mejustbox-byte/hyperv-opsec-auditor/actions) |
+| Выпуск и суммы | [RELEASE-CHECKLIST](RELEASE-CHECKLIST.md), [RELEASE-NOTES](RELEASE-NOTES.md) | [CHANGELOG](CHANGELOG.md) |
+
+Прежние материалы `docs/` сохранены, связаны ссылками и уточняют основные документы. HTTP API и функции других проектов не заявляются.
+
+## Лицензия и документы безопасности
+
+Код и документация проекта распространяются по MIT. Канонический английский [LICENSE](LICENSE) и [русский перевод/пояснение](LICENSE.ru.md) включены в wheel и sdist. Сторонние лицензии не заменяются лицензией проекта.
+
+| Документ | Назначение |
+|---|---|
+| [SECURITY](SECURITY.md) | Поддерживаемые prerelease, сообщение об уязвимости, границы доверия |
+| [SECURITY-DATA](SECURITY-DATA.md) | Минимизация, доступ, хранение, retention и утечки evidence/отчетов |
+| [SUPPLY-CHAIN](SUPPLY-CHAIN.md) | Точные зависимости/лицензии, обновления, целостность выпуска |
+| [SECURITY-TESTING](SECURITY-TESTING.md) | Автономные security проверки и не выполненные лабораторные gates |
+| [AGENTS](AGENTS.md) | Правила следующих циклов и фактической проверки результатов |
+| [LICENSE.ru](LICENSE.ru.md) | Права MIT, отказ от гарантий и ссылка на оригинал |

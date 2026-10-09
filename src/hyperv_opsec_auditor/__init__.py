@@ -1,2 +1,2 @@
-"""Read-only offline Hyper-V posture evaluation."""
-__version__ = '0.1.0a1'
+"""Автономная оценка защиты Hyper-V, только для чтения."""
+__version__ = '0.1.0a2'

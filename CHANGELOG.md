@@ -1,13 +1,23 @@
-# Release notes
+# История изменений и сведения о выпусках
 
-## 0.1.0a1 — alpha / prerelease candidate
+## 0.1.0a2 — предварительный выпуск
 
-First useful offline CLI: audit/validate/rules, bundled JSON Schema 1.0, ten rule families HV-01..HV-10, JSON and readable Markdown reports, evidence pointers, severity, manual remediation, pass/fail/unknown/not_run, freshness limits and visible exclusions. Input is bounded and rejects malformed data, duplicate keys/IDs, non-finite numbers and unsupported fields. Output files are created exclusively without overwriting existing paths.
+Документация, справка CLI, названия правил, рекомендации, причины результатов, сообщения проверки данных, описания схемы и шаблоны отчетов переведены на русский язык. Добавлены правила участия и русские шаблоны задач/PR. Ключи JSON, команды, пути, идентификаторы, статусы и логика проверки сохранены. Примеры отчетов обновлены; новые текстовые значения выводятся в UTF-8.
 
-Includes synthetic healthy/unsafe/partial fixtures, unit and subprocess integration tests, hashed build/test lock, wheel/sdist packaging, clean-install smoke tests, hosted Linux/Windows offline CI and full design/user/lab documentation.
+Версия пакета: `0.1.0a2`. Тег Hyper-V: `v0.1.0a2`. Старый выпуск `v0.1.0a1` сохраняется, его тег не перемещается. Инструкции установки и запуска облачной среды переведены на русский и сохранены в черновике настроек.
 
-**Platform validation NOT RUN:** real Windows Server Hyper-V, effective AD/WinRM/storage configuration, VM/vSwitch/VLAN runtime isolation, Secure Boot supported guests, vTPM/Shielded VM/HGS attestation/key recovery, backup immutability and real ransomware-recovery drill/RPO/RTO. No live collector is included. Synthetic and hosted Windows offline tests are not real infrastructure validation. The release must remain a prerelease until that acceptance is completed.
+Проверки: модульные и интеграционные тесты, совпадение проверки со схемой JSON, русские пользовательские тексты, ссылки документации, поиск известных шаблонов секретов, сборка wheel/sdist и установка в чистую среду. Фактические результаты описаны в `VALIDATION.md`; локальная сборка не подтверждает удаленный CI или публикацию, которые проверяются отдельно.
 
-Installation: Python >=3.12; verify SHA256SUMS, then `python -m pip install --no-index --no-deps hyperv_opsec_auditor-0.1.0a1-py3-none-any.whl`. Run `hyperv-opsec-auditor audit healthy.json --as-of 2026-10-09T00:00:00Z --format json` using the attached fictional sample. Source installation and real-evidence preparation are documented in docs/user-guide.md. Runtime dependencies: none.
+**Реальные платформенные испытания НЕ ВЫПОЛНЕНЫ:** Windows Server Hyper-V, эффективные права AD/WinRM/хранилища, изоляция VM/vSwitch/VLAN, поддерживаемые гостевые ОС Secure Boot, vTPM/Shielded VM/HGS и восстановление ключей, неизменяемость резервных копий и реальное восстановление после программ-вымогателей с измерением RPO/RTO. Сборщик данных с Windows не реализован. Синтетические проверки и автономные тесты Python на исполнителях Windows не являются проверкой реальной инфраструктуры. Выпуск остается предварительным до лабораторной приемки.
 
-Actual local validation results are stored in VALIDATION.md. A local build or Git tag is not evidence of PR merge, remote CI or GitHub Release publication; those operations must be verified separately.
+Установка: Python >=3.12; проверьте `SHA256SUMS`, затем выполните `python -m pip install --no-index --no-deps hyperv_opsec_auditor-0.1.0a2-py3-none-any.whl`. Запуск вымышленного примера: `hyperv-opsec-auditor audit healthy.json --as-of 2026-10-09T00:00:00Z --format json`. Подготовка реальных данных и установка из исходников описаны в `docs/user-guide.md`. Сторонних зависимостей для выполнения нет.
+
+- Добавлены полный MIT LICENSE, русский перевод, license metadata и проверки включения обеих лицензий в wheel/sdist; расширенные документы безопасности и AGENTS.md.
+
+## 0.1.0a1 — первый предварительный выпуск
+
+Первый автономный CLI: `audit`/`validate`/`rules`, схема JSON 1.0, десять семейств правил HV-01..HV-10, отчеты JSON и Markdown, ссылки на данные, критичность, ручные рекомендации и статусы `pass`/`fail`/`unknown`/`not_run`. Добавлены сроки актуальности и видимые исключения. Вход ограничен; некорректные данные, повторные ключи/идентификаторы, нечисловые значения и неизвестные поля отклоняются. Выходные файлы создаются без перезаписи существующих путей.
+
+Включены синтетические сценарии `healthy`/`unsafe`/`partial`, модульные и интеграционные тесты CLI, закрепленные с хешами инструменты сборки, пакеты wheel/sdist, проверки чистой установки, автономный CI Linux/Windows и проектная документация. Реальные платформенные проверки этого выпуска также не выполнялись.
+
+Историческая установка пакета `0.1.0a1`: `python -m pip install --no-index --no-deps hyperv_opsec_auditor-0.1.0a1-py3-none-any.whl`. Команда вымышленного примера: `hyperv-opsec-auditor audit healthy.json --as-of 2026-10-09T00:00:00Z --format json`.

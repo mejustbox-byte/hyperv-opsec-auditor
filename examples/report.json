@@ -27,12 +27,12 @@
           "pointer": "/host/security_updates_current"
         }
       ],
-      "rationale": "All required supplied evidence for this rule matches the baseline.",
-      "remediation": "Review the supported host/build profile, enable the approved Hyper-V role and apply approved security updates.",
+      "rationale": "Все необходимые предоставленные данные правила соответствуют базовой политике.",
+      "remediation": "Проверьте поддерживаемость хоста и сборки; в рамках разрешенного изменения включите утвержденную роль Hyper-V и установите утвержденные обновления безопасности.",
       "rule_id": "HV-01",
       "severity": "high",
       "status": "pass",
-      "title": "Host support and updates"
+      "title": "Поддержка хоста и обновления"
     },
     {
       "asset": "fictional-lab",
@@ -64,12 +64,12 @@
           "pointer": "/administration/actual_admins"
         }
       ],
-      "rationale": "Evidence violates the baseline: unapproved administrators.",
-      "remediation": "Review effective administrator rights, remove unapproved grants through an authorized change, and separate management accounts and networks.",
+      "rationale": "Данные нарушают базовую политику: неутвержденные администраторы.",
+      "remediation": "Проверьте эффективные административные права; разрешенным изменением удалите неутвержденные права и разделите учетные записи и сети управления.",
       "rule_id": "HV-02",
       "severity": "critical",
       "status": "fail",
-      "title": "Management privileges"
+      "title": "Права управления"
     },
     {
       "asset": "fictional-lab",
@@ -110,12 +110,12 @@
           "pointer": "/winrm/allow_unencrypted"
         }
       ],
-      "rationale": "Evidence violates the baseline: allow_unencrypted.",
-      "remediation": "Review HTTPS/certificate, disable Basic and unencrypted management, restrict firewall scope and delegation through an authorized change.",
+      "rationale": "Данные нарушают базовую политику: allow_unencrypted.",
+      "remediation": "Проверьте HTTPS и сертификат; разрешенным изменением отключите Basic и незашифрованное управление, ограничьте правила межсетевого экрана и делегирование.",
       "rule_id": "HV-03",
       "severity": "high",
       "status": "fail",
-      "title": "WinRM management security"
+      "title": "Безопасность управления WinRM"
     },
     {
       "asset": "fictional-lab",
@@ -154,12 +154,12 @@
           "pointer": "/network/adapters/0/sriov"
         }
       ],
-      "rationale": "Evidence violates the baseline: VLAN outside approved scope or empty VLAN set.",
-      "remediation": "Review the approved topology, VLAN allowlist, switch type, trunk and SR-IOV exceptions; validate isolation in the lab.",
+      "rationale": "Данные нарушают базовую политику: VLAN вне утвержденной области или пустой набор VLAN.",
+      "remediation": "Проверьте утвержденную топологию, разрешенные VLAN, тип коммутатора, исключения для транков и SR-IOV; подтвердите изоляцию на стенде.",
       "rule_id": "HV-04",
       "severity": "high",
       "status": "fail",
-      "title": "Virtual network isolation"
+      "title": "Изоляция виртуальной сети"
     },
     {
       "asset": "vm-demo",
@@ -188,12 +188,12 @@
           "pointer": "/virtual_machines/vms/0/secure_boot_template_approved"
         }
       ],
-      "rationale": "Evidence violates the baseline: secure_boot_enabled.",
-      "remediation": "For supported generation 2 profiles, enable the approved Secure Boot trust template through a reviewed change.",
+      "rationale": "Данные нарушают базовую политику: secure_boot_enabled.",
+      "remediation": "Для поддерживаемых профилей Gen2 включите утвержденный шаблон доверия Secure Boot в рамках проверенного изменения.",
       "rule_id": "HV-05",
       "severity": "high",
       "status": "fail",
-      "title": "VM Secure Boot"
+      "title": "Secure Boot виртуальной машины"
     },
     {
       "asset": "vm-demo",
@@ -235,12 +235,12 @@
           "pointer": "/virtual_machines/vms/0/hgs_attestation_valid"
         }
       ],
-      "rationale": "Evidence violates the baseline: shielded.",
-      "remediation": "Review vTPM requirements separately from shielding; verify key protection and HGS trust in a supported lab.",
+      "rationale": "Данные нарушают базовую политику: shielded.",
+      "remediation": "Проверьте требования vTPM отдельно от Shielded VM; подтвердите защиту ключей и доверие HGS на поддерживаемом стенде.",
       "rule_id": "HV-06",
       "severity": "high",
       "status": "fail",
-      "title": "VM TPM and shielding"
+      "title": "vTPM и защита Shielded VM"
     },
     {
       "asset": "fictional-lab",
@@ -267,12 +267,12 @@
           "pointer": "/storage/assets/0/encrypted"
         }
       ],
-      "rationale": "Evidence violates the baseline: unapproved_principals.",
-      "remediation": "Review effective VHDX/checkpoint/config/backup access, remove unapproved principals and enforce approved encryption.",
+      "rationale": "Данные нарушают базовую политику: unapproved_principals.",
+      "remediation": "Проверьте эффективный доступ к VHDX, контрольным точкам, конфигурациям и копиям; удалите неутвержденные права и обеспечьте требуемое шифрование разрешенным изменением.",
       "rule_id": "HV-07",
       "severity": "critical",
       "status": "fail",
-      "title": "Virtual storage protection"
+      "title": "Защита виртуального хранилища"
     },
     {
       "asset": "fictional-lab",
@@ -298,12 +298,12 @@
           "pointer": "/backup/checkpoint_only"
         }
       ],
-      "rationale": "Evidence violates the baseline: checkpoint_only.",
-      "remediation": "Use independent immutable or offline copies and separate backup identities. Checkpoints are not backups.",
+      "rationale": "Данные нарушают базовую политику: checkpoint_only.",
+      "remediation": "Используйте независимые неизменяемые или автономные копии и отдельные учетные записи резервного копирования. Контрольные точки не являются резервными копиями.",
       "rule_id": "HV-08",
       "severity": "critical",
       "status": "fail",
-      "title": "Independent protected backups"
+      "title": "Независимые защищенные резервные копии"
     },
     {
       "asset": "fictional-lab",
@@ -330,12 +330,12 @@
           "pointer": "/logging/retention_days"
         }
       ],
-      "rationale": "Evidence violates the baseline: central_delivery_verified.",
-      "remediation": "Enable approved auditing, validate central delivery and tamper protection, and meet the required retention period.",
+      "rationale": "Данные нарушают базовую политику: central_delivery_verified.",
+      "remediation": "Включите утвержденный аудит, подтвердите централизованную доставку и защиту от подмены, обеспечьте требуемый срок хранения.",
       "rule_id": "HV-09",
       "severity": "medium",
       "status": "fail",
-      "title": "Audit logging"
+      "title": "Журналирование аудита"
     },
     {
       "asset": "fictional-lab",
@@ -377,19 +377,19 @@
           "pointer": "/recovery/measured_rto_hours"
         }
       ],
-      "rationale": "Evidence violates the baseline: RTO exceeds target.",
-      "remediation": "Perform an authorized isolated restore drill without malware; verify integrity and document measured RPO/RTO, reviewer and runbook.",
+      "rationale": "Данные нарушают базовую политику: RTO превышает цель.",
+      "remediation": "Проведите разрешенное изолированное учебное восстановление без вредоносных программ; проверьте целостность, документируйте RPO/RTO, проверяющего и инструкцию.",
       "rule_id": "HV-10",
       "severity": "critical",
       "status": "fail",
-      "title": "Verified recovery readiness"
+      "title": "Проверенная готовность к восстановлению"
     }
   ],
   "limitations": [
-    "Offline evaluation of supplied evidence; no live Hyper-V, WinRM, network or backup access.",
-    "Support, effective rights, isolation and restore attestations are supplied by the evidence owner, not independently verified.",
-    "Synthetic results do not validate real infrastructure. Actual Windows Hyper-V/HGS and recovery tests are NOT RUN.",
-    "No configuration changes or remediation are executed. Reports can contain sensitive pseudonymous evidence."
+    "Автономная оценка предоставленных данных без доступа к Hyper-V, WinRM, сети и резервным копиям.",
+    "Поддержка, эффективные права, изоляция и восстановление подтверждаются владельцем данных, а не независимой проверкой аудитора.",
+    "Синтетические результаты не проверяют реальную инфраструктуру. Реальные испытания Windows Hyper-V/HGS и восстановления НЕ ВЫПОЛНЕНЫ.",
+    "Изменения и исправления настроек не выполняются. Отчеты могут содержать конфиденциальные данные даже с псевдонимами."
   ],
   "policy": {
     "excluded_rules": [],
@@ -406,5 +406,5 @@
     "unknown": 0
   },
   "synthetic": true,
-  "tool_version": "0.1.0a1"
+  "tool_version": "0.1.0a2"
 }

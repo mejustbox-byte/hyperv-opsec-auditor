@@ -10,3 +10,8 @@ include CHANGELOG.md
 include VALIDATION.md
 recursive-include tools *.sh
 recursive-include .github *.yml
+include CONTRIBUTING.md
+recursive-include .github *.md
+
+include *.md
+include LICENSE

@@ -4,11 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hyperv-opsec-auditor"
-version = "0.1.0a1"
-description = "Read-only offline Hyper-V security posture auditing from supplied evidence"
+version = "0.1.0a2"
+description = "Автономный аудит защиты Hyper-V по предоставленным данным, только для чтения"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "LICENSE.ru.md"]
 requires-python = ">=3.12"
-authors = [{name = "hyperv-opsec-auditor contributors"}]
+authors = [{name = "участники проекта hyperv-opsec-auditor"}]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3",

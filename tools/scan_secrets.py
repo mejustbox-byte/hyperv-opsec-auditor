@@ -1,4 +1,4 @@
-"""Conservative public-file credential pattern scan; not a complete secret audit."""
+"""Поиск известных шаблонов учетных данных; не полный аудит секретов."""
 import re
 import subprocess
 from pathlib import Path
@@ -22,8 +22,8 @@ def main():
         except UnicodeError: continue
         if any(re.search(pattern,text) for pattern in PATTERNS): suspicious.append(name)
     if suspicious:
-        # Never print matched values.
-        raise SystemExit('Credential patterns detected in files: '+', '.join(suspicious))
-    print(f'PASS: {len(paths)} public files scanned; no credential-pattern matches. Not a comprehensive secret audit.')
+        # Найденные значения не выводятся.
+        raise SystemExit('Шаблоны учетных данных найдены в файлах: '+', '.join(suspicious))
+    print(f'ПРОЙДЕНО: {len(paths)} публичных файлов проверено; известные шаблоны учетных данных не найдены. Это не полный аудит секретов.')
 
 if __name__=='__main__': main()

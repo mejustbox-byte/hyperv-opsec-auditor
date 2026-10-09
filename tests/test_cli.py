@@ -16,10 +16,10 @@ AS_OF='2026-10-09T00:00:00Z'
 
 class CliTests(unittest.TestCase):
     def run_cli(self,*args):
-        return subprocess.run([sys.executable,'-m','hyperv_opsec_auditor',*map(str,args)],capture_output=True,text=True,cwd=ROOT)
+        return subprocess.run([sys.executable,'-m','hyperv_opsec_auditor',*map(str,args)],capture_output=True,text=True,encoding='utf-8',cwd=ROOT)
 
     def test_help_version_rules_validate(self):
-        for args,expected in [(('--help',),'offline'),(('--version',),'0.1.0a1'),(('rules',),'HV-10'),(('validate','fixtures/healthy.json'),'Valid evidence')]:
+        for args,expected in [(('--help',),'Автономный'),(('--version',),'0.1.0a2'),(('rules',),'HV-10'),(('validate','fixtures/healthy.json'),'Данные 1.0 корректны')]:
             result=self.run_cli(*args)
             with self.subTest(args=args): self.assertEqual(result.returncode,0); self.assertIn(expected,result.stdout)
 
@@ -29,7 +29,7 @@ class CliTests(unittest.TestCase):
         self.assertEqual(result.returncode,0,result.stderr)
         self.assertEqual(json.loads(result.stdout)['summary']['pass'],10)
         result=self.run_cli('audit','fixtures/unsafe.json','--as-of',AS_OF,'--fail-on','fail')
-        self.assertEqual(result.returncode,1); self.assertIn('SYNTHETIC',result.stdout); self.assertIn('Recommendation',result.stdout)
+        self.assertEqual(result.returncode,1); self.assertIn('СИНТЕТИЧЕСКИЕ',result.stdout); self.assertIn('Рекомендация',result.stdout)
         self.assertEqual((ROOT/'fixtures/healthy.json').read_bytes(),original)
 
     def test_partial_exit_modes(self):
@@ -53,7 +53,7 @@ class CliTests(unittest.TestCase):
             self.assertEqual(second.returncode,2); self.assertEqual(before,path.read_bytes())
             if os.name=='posix': self.assertEqual(path.stat().st_mode & 0o777,0o600)
 
-    @unittest.skipUnless(os.name=='posix','symlink permission semantics use POSIX lab')
+    @unittest.skipUnless(os.name=='posix','Права символических ссылок проверяются только на POSIX')
     def test_output_symlink_rejected(self):
         with tempfile.TemporaryDirectory() as folder:
             target=Path(folder)/'target'; target.write_text('keep')

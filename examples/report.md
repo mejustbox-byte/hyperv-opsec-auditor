@@ -1,178 +1,178 @@
-# Hyper-V offline posture report
+# Автономный отчет о защите Hyper-V
 
-Scope: fictional-lab
-Evidence: 2026-10-09T00:00:00Z; as of: 2026-10-09T00:00:00Z
-Tool: 0.1.0a1; policy: mvp-baseline-1.0
+Область: fictional-lab
+Данные: 2026-10-09T00:00:00Z; момент оценки: 2026-10-09T00:00:00Z
+Инструмент: 0.1.0a2; политика: mvp-baseline-1.0
 
-**SYNTHETIC EVIDENCE — no real infrastructure validation.**
+**СИНТЕТИЧЕСКИЕ ДАННЫЕ — реальная инфраструктура не проверялась.**
 
 pass: 1 | fail: 9 | unknown: 0 | not_run: 0
 
-## Limitations
+## Ограничения
 
-- Offline evaluation of supplied evidence; no live Hyper-V, WinRM, network or backup access.
-- Support, effective rights, isolation and restore attestations are supplied by the evidence owner, not independently verified.
-- Synthetic results do not validate real infrastructure. Actual Windows Hyper-V/HGS and recovery tests are NOT RUN.
-- No configuration changes or remediation are executed. Reports can contain sensitive pseudonymous evidence.
+- Автономная оценка предоставленных данных без доступа к Hyper-V, WinRM, сети и резервным копиям.
+- Поддержка, эффективные права, изоляция и восстановление подтверждаются владельцем данных, а не независимой проверкой аудитора.
+- Синтетические результаты не проверяют реальную инфраструктуру. Реальные испытания Windows Hyper-V/HGS и восстановления НЕ ВЫПОЛНЕНЫ.
+- Изменения и исправления настроек не выполняются. Отчеты могут содержать конфиденциальные данные даже с псевдонимами.
 
 ## HV-01 / fictional-lab: pass
 
-Host support and updates — severity: high
+Поддержка хоста и обновления — критичность: high
 
-All required supplied evidence for this rule matches the baseline.
+Все необходимые предоставленные данные правила соответствуют базовой политике.
 
-Evidence:
+Данные:
 
-- /host/hyperv\_role\_enabled: true; expected: true
-- /host/supported\_configuration: true; expected: true
-- /host/supported\_build: true; expected: true
-- /host/security\_updates\_current: true; expected: true
+- /host/hyperv\_role\_enabled: true; ожидается: true
+- /host/supported\_configuration: true; ожидается: true
+- /host/supported\_build: true; ожидается: true
+- /host/security\_updates\_current: true; ожидается: true
 
-Recommendation (manual review only): Review the supported host/build profile, enable the approved Hyper-V role and apply approved security updates.
+Рекомендация (только для ручной проверки): Проверьте поддерживаемость хоста и сборки; в рамках разрешенного изменения включите утвержденную роль Hyper-V и установите утвержденные обновления безопасности.
 
 ## HV-02 / fictional-lab: fail
 
-Management privileges — severity: critical
+Права управления — критичность: critical
 
-Evidence violates the baseline: unapproved administrators.
+Данные нарушают базовую политику: неутвержденные администраторы.
 
-Evidence:
+Данные:
 
-- /administration/effective\_rights\_reviewed: true; expected: true
-- /administration/separate\_management\_accounts: true; expected: true
-- /administration/management\_network\_isolated: true; expected: true
-- /administration/actual\_admins: \[&quot;lab-admin&quot;, &quot;unexpected-admin&quot;\]; expected: \[&quot;lab-admin&quot;\]
+- /administration/effective\_rights\_reviewed: true; ожидается: true
+- /administration/separate\_management\_accounts: true; ожидается: true
+- /administration/management\_network\_isolated: true; ожидается: true
+- /administration/actual\_admins: \[&quot;lab-admin&quot;, &quot;unexpected-admin&quot;\]; ожидается: \[&quot;lab-admin&quot;\]
 
-Recommendation (manual review only): Review effective administrator rights, remove unapproved grants through an authorized change, and separate management accounts and networks.
+Рекомендация (только для ручной проверки): Проверьте эффективные административные права; разрешенным изменением удалите неутвержденные права и разделите учетные записи и сети управления.
 
 ## HV-03 / fictional-lab: fail
 
-WinRM management security — severity: high
+Безопасность управления WinRM — критичность: high
 
-Evidence violates the baseline: allow\_unencrypted.
+Данные нарушают базовую политику: allow\_unencrypted.
 
-Evidence:
+Данные:
 
-- /winrm/enabled: true; expected: true
-- /winrm/https\_only: true; expected: true
-- /winrm/certificate\_valid: true; expected: true
-- /winrm/firewall\_scoped: true; expected: true
-- /winrm/delegation\_restricted: true; expected: true
-- /winrm/basic\_auth\_enabled: false; expected: false
-- /winrm/allow\_unencrypted: true; expected: false
+- /winrm/enabled: true; ожидается: true
+- /winrm/https\_only: true; ожидается: true
+- /winrm/certificate\_valid: true; ожидается: true
+- /winrm/firewall\_scoped: true; ожидается: true
+- /winrm/delegation\_restricted: true; ожидается: true
+- /winrm/basic\_auth\_enabled: false; ожидается: false
+- /winrm/allow\_unencrypted: true; ожидается: false
 
-Recommendation (manual review only): Review HTTPS/certificate, disable Basic and unencrypted management, restrict firewall scope and delegation through an authorized change.
+Рекомендация (только для ручной проверки): Проверьте HTTPS и сертификат; разрешенным изменением отключите Basic и незашифрованное управление, ограничьте правила межсетевого экрана и делегирование.
 
 ## HV-04 / fictional-lab: fail
 
-Virtual network isolation — severity: high
+Изоляция виртуальной сети — критичность: high
 
-Evidence violates the baseline: VLAN outside approved scope or empty VLAN set.
+Данные нарушают базовую политику: VLAN вне утвержденной области или пустой набор VLAN.
 
-Evidence:
+Данные:
 
-- /network/topology\_reviewed: true; expected: true
-- /network/adapters/0/switch\_type: &quot;internal&quot;; expected: &quot;internal&quot;
-- /network/adapters/0/vlans: \[99\]; expected: \[42\]
-- /network/adapters/0/trunk: false; expected: false
-- /network/adapters/0/sriov: false; expected: false
+- /network/topology\_reviewed: true; ожидается: true
+- /network/adapters/0/switch\_type: &quot;internal&quot;; ожидается: &quot;internal&quot;
+- /network/adapters/0/vlans: \[99\]; ожидается: \[42\]
+- /network/adapters/0/trunk: false; ожидается: false
+- /network/adapters/0/sriov: false; ожидается: false
 
-Recommendation (manual review only): Review the approved topology, VLAN allowlist, switch type, trunk and SR-IOV exceptions; validate isolation in the lab.
+Рекомендация (только для ручной проверки): Проверьте утвержденную топологию, разрешенные VLAN, тип коммутатора, исключения для транков и SR-IOV; подтвердите изоляцию на стенде.
 
 ## HV-05 / vm-demo: fail
 
-VM Secure Boot — severity: high
+Secure Boot виртуальной машины — критичность: high
 
-Evidence violates the baseline: secure\_boot\_enabled.
+Данные нарушают базовую политику: secure\_boot\_enabled.
 
-Evidence:
+Данные:
 
 - /virtual\_machines/vms/0/generation: 2
 - /virtual\_machines/vms/0/profile\_supported: true
-- /virtual\_machines/vms/0/require\_secure\_boot: true; expected: true
-- /virtual\_machines/vms/0/secure\_boot\_enabled: false; expected: true
-- /virtual\_machines/vms/0/secure\_boot\_template\_approved: true; expected: true
+- /virtual\_machines/vms/0/require\_secure\_boot: true; ожидается: true
+- /virtual\_machines/vms/0/secure\_boot\_enabled: false; ожидается: true
+- /virtual\_machines/vms/0/secure\_boot\_template\_approved: true; ожидается: true
 
-Recommendation (manual review only): For supported generation 2 profiles, enable the approved Secure Boot trust template through a reviewed change.
+Рекомендация (только для ручной проверки): Для поддерживаемых профилей Gen2 включите утвержденный шаблон доверия Secure Boot в рамках проверенного изменения.
 
 ## HV-06 / vm-demo: fail
 
-VM TPM and shielding — severity: high
+vTPM и защита Shielded VM — критичность: high
 
-Evidence violates the baseline: shielded.
+Данные нарушают базовую политику: shielded.
 
-Evidence:
+Данные:
 
 - /virtual\_machines/vms/0/generation: 2
 - /virtual\_machines/vms/0/profile\_supported: true
 - /virtual\_machines/vms/0/require\_vtpm: true
 - /virtual\_machines/vms/0/require\_shielding: true
-- /virtual\_machines/vms/0/vtpm\_enabled: true; expected: true
-- /virtual\_machines/vms/0/shielded: false; expected: true
-- /virtual\_machines/vms/0/key\_protector\_valid: true; expected: true
-- /virtual\_machines/vms/0/hgs\_attestation\_valid: true; expected: true
+- /virtual\_machines/vms/0/vtpm\_enabled: true; ожидается: true
+- /virtual\_machines/vms/0/shielded: false; ожидается: true
+- /virtual\_machines/vms/0/key\_protector\_valid: true; ожидается: true
+- /virtual\_machines/vms/0/hgs\_attestation\_valid: true; ожидается: true
 
-Recommendation (manual review only): Review vTPM requirements separately from shielding; verify key protection and HGS trust in a supported lab.
+Рекомендация (только для ручной проверки): Проверьте требования vTPM отдельно от Shielded VM; подтвердите защиту ключей и доверие HGS на поддерживаемом стенде.
 
 ## HV-07 / fictional-lab: fail
 
-Virtual storage protection — severity: critical
+Защита виртуального хранилища — критичность: critical
 
-Evidence violates the baseline: unapproved\_principals.
+Данные нарушают базовую политику: unapproved\_principals.
 
-Evidence:
+Данные:
 
-- /storage/assets/0/effective\_acl\_reviewed: true; expected: true
-- /storage/assets/0/unapproved\_principals: \[&quot;broad-access&quot;\]; expected: \[\]
+- /storage/assets/0/effective\_acl\_reviewed: true; ожидается: true
+- /storage/assets/0/unapproved\_principals: \[&quot;broad-access&quot;\]; ожидается: \[\]
 - /storage/assets/0/require\_encryption: true
-- /storage/assets/0/encrypted: true; expected: true
+- /storage/assets/0/encrypted: true; ожидается: true
 
-Recommendation (manual review only): Review effective VHDX/checkpoint/config/backup access, remove unapproved principals and enforce approved encryption.
+Рекомендация (только для ручной проверки): Проверьте эффективный доступ к VHDX, контрольным точкам, конфигурациям и копиям; удалите неутвержденные права и обеспечьте требуемое шифрование разрешенным изменением.
 
 ## HV-08 / fictional-lab: fail
 
-Independent protected backups — severity: critical
+Независимые защищенные резервные копии — критичность: critical
 
-Evidence violates the baseline: checkpoint\_only.
+Данные нарушают базовую политику: checkpoint\_only.
 
-Evidence:
+Данные:
 
-- /backup/independent\_copy: true; expected: true
-- /backup/immutable\_or\_offline: true; expected: true
-- /backup/separate\_identity: true; expected: true
-- /backup/checkpoint\_only: true; expected: false
+- /backup/independent\_copy: true; ожидается: true
+- /backup/immutable\_or\_offline: true; ожидается: true
+- /backup/separate\_identity: true; ожидается: true
+- /backup/checkpoint\_only: true; ожидается: false
 
-Recommendation (manual review only): Use independent immutable or offline copies and separate backup identities. Checkpoints are not backups.
+Рекомендация (только для ручной проверки): Используйте независимые неизменяемые или автономные копии и отдельные учетные записи резервного копирования. Контрольные точки не являются резервными копиями.
 
 ## HV-09 / fictional-lab: fail
 
-Audit logging — severity: medium
+Журналирование аудита — критичность: medium
 
-Evidence violates the baseline: central\_delivery\_verified.
+Данные нарушают базовую политику: central\_delivery\_verified.
 
-Evidence:
+Данные:
 
-- /logging/audit\_enabled: true; expected: true
-- /logging/central\_delivery\_verified: false; expected: true
-- /logging/tamper\_protection: true; expected: true
-- /logging/retention\_days: 90; expected: 30
+- /logging/audit\_enabled: true; ожидается: true
+- /logging/central\_delivery\_verified: false; ожидается: true
+- /logging/tamper\_protection: true; ожидается: true
+- /logging/retention\_days: 90; ожидается: 30
 
-Recommendation (manual review only): Enable approved auditing, validate central delivery and tamper protection, and meet the required retention period.
+Рекомендация (только для ручной проверки): Включите утвержденный аудит, подтвердите централизованную доставку и защиту от подмены, обеспечьте требуемый срок хранения.
 
 ## HV-10 / fictional-lab: fail
 
-Verified recovery readiness — severity: critical
+Проверенная готовность к восстановлению — критичность: critical
 
-Evidence violates the baseline: RTO exceeds target.
+Данные нарушают базовую политику: RTO превышает цель.
 
-Evidence:
+Данные:
 
 - /recovery/drill\_performed\_at: &quot;2026-10-01T00:00:00Z&quot;
-- /recovery/runbook\_reviewed: true; expected: true
-- /recovery/integrity\_verified: true; expected: true
-- /recovery/isolated\_restore: true; expected: true
-- /recovery/reviewer\_approved: true; expected: true
-- /recovery/measured\_rpo\_hours: 1; expected: 4
-- /recovery/measured\_rto\_hours: 10; expected: 8
+- /recovery/runbook\_reviewed: true; ожидается: true
+- /recovery/integrity\_verified: true; ожидается: true
+- /recovery/isolated\_restore: true; ожидается: true
+- /recovery/reviewer\_approved: true; ожидается: true
+- /recovery/measured\_rpo\_hours: 1; ожидается: 4
+- /recovery/measured\_rto\_hours: 10; ожидается: 8
 
-Recommendation (manual review only): Perform an authorized isolated restore drill without malware; verify integrity and document measured RPO/RTO, reviewer and runbook.
+Рекомендация (только для ручной проверки): Проведите разрешенное изолированное учебное восстановление без вредоносных программ; проверьте целостность, документируйте RPO/RTO, проверяющего и инструкцию.

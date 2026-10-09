@@ -1,22 +1,23 @@
-# Контракт evidence 1.0
+# Контракт входных данных 1.0
 
-Авторитетная схема: [evidence.schema.json](../src/hyperv_opsec_auditor/evidence.schema.json). Содержит точные типы, enum и ограничения. Runtime validator поддерживает только keywords этого bundled schema; произвольная схема или remote $ref не принимается. JSON Schema parity проверяется внешним jsonschema в tests.
+Авторитетная [схема](../src/hyperv_opsec_auditor/evidence.schema.json) задает типы, перечисления и ограничения. Проверка поддерживает только ключевые слова встроенной схемы; произвольные схемы и удаленные `$ref` не принимаются. Совпадение с JSON Schema проверяется внешним `jsonschema` в тестах.
 
-Обязательные поля: schema_version="1.0", synthetic=true/false, scope и evidence_source (псевдонимы 1..64 ASCII букв/цифр/_.-), collected_at YYYY-MM-DDTHH:MM:SSZ. Никаких паролей, real hostname, IP, имен пользователей или ключей. Разделы необязательны; state обязателен при наличии: ok, error, not_collected. Каждый array <=1000 unique элементов, input <=2 MiB; неизвестные поля и повторные JSON keys запрещены. Inventory IDs уникальны внутри раздела; VLAN 1..4094.
+Обязательные поля: `schema_version="1.0"`, `synthetic=true/false`, `scope` и `evidence_source` — псевдонимы 1..64 ASCII букв/цифр/`_.-`; `collected_at` — `YYYY-MM-DDTHH:MM:SSZ`. Пароли, реальные имена хостов, IP, имена пользователей и ключи не допускаются. Разделы необязательны; при их наличии обязательно `state`: `ok`, `error`, `not_collected`. Массивы содержат до 1000 уникальных элементов, вход — до 2 MiB. Неизвестные поля и повторные ключи запрещены; идентификаторы объектов уникальны внутри раздела, VLAN — 1..4094.
 
-Boolean null/отсутствие — unknown, а не false. Для ожидаемых требований используются require_*, approved_*, allowed_* и expected_* поля: владелец предварительно утверждает их. `supported_configuration`, `supported_build`, `profile_supported`, `effective_rights_reviewed`, `effective_acl_reviewed`, `central_delivery_verified` — внешние reviewed attestations; аудитор не проверяет их истинность.
+Логические значения `null`/отсутствие означают `unknown`, не `false`. Требования политики задаются полями `require_*`, `approved_*`, `allowed_*`, `expected_*`, которые владелец утверждает заранее. `supported_configuration`, `supported_build`, `profile_supported`, `effective_rights_reviewed`, `effective_acl_reviewed`, `central_delivery_verified` — отдельно проверенные декларации владельца; аудитор не устанавливает их истинность.
 
 Разделы:
-- host: роль Hyper-V, support конфигурации/build и актуальность updates.
-- administration: actual_admins и approved_admins псевдонимы, effective review, разделение accounts/network.
-- winrm: enabled; если включен — HTTPS/certificate/firewall/delegation, запрет Basic и unencrypted.
-- network: complete reviewed inventory adapters; switch_type/expected_switch_type, фактические vlans/allowed_vlans, trunk/allow_trunk и sriov/allow_sriov.
-- virtual_machines: полный inventory vms, generation и supported profile; отдельные require_secure_boot/require_vtpm/require_shielding и фактические настройки. Шаблон Secure Boot approved отдельно.
-- storage: assets с reviewed effective ACL, unapproved_principals и encryption policy; отдельно перечислять VHDX, AVHDX, VM config и backup assets.
-- backup: independent copy, immutable/offline, separate identity, checkpoint_only.
-- logging: audit, внешняя delivery, tamper protection, actual/required retention_days.
-- recovery: reviewed runbook, drill_performed_at, integrity/isolated/reviewer attestations, measured/target RPO/RTO в часах. Drill позже collection запрещен.
 
-Freshness: --as-of задает UTC момент оценки; default текущее UTC. --max-evidence-age-days default 30; --max-restore-age-days default 90. Future evidence или старше лимита дает unknown; граница включительна. Для воспроизводимых examples всегда задается фиксированное as-of. Replaying fixture с as-of 2026-10-09 не подтверждает свежесть реального host.
+- `host`: роль Hyper-V, поддержка конфигурации/сборки, актуальность обновлений.
+- `administration`: псевдонимы `actual_admins`/`approved_admins`, проверка эффективных прав, раздельные учетные записи/сеть.
+- `winrm`: `enabled`; если включен — HTTPS/сертификат/межсетевой экран/делегирование, запрет Basic и незашифрованного доступа.
+- `network`: полный проверенный перечень `adapters`; `switch_type`/`expected_switch_type`, фактические `vlans`/`allowed_vlans`, `trunk`/`allow_trunk`, `sriov`/`allow_sriov`.
+- `virtual_machines`: полный перечень `vms`, `generation`, поддерживаемый профиль, отдельные `require_secure_boot`/`require_vtpm`/`require_shielding` и настройки. Шаблон Secure Boot утверждается отдельно.
+- `storage`: `assets`, проверенные эффективные ACL, `unapproved_principals`, политика шифрования; VHDX, AVHDX, конфигурации VM и объекты копирования перечисляются отдельно.
+- `backup`: независимая копия, неизменяемость/автономность, отдельная учетная запись, `checkpoint_only`.
+- `logging`: аудит, внешняя доставка, защита от подмены, фактический/необходимый срок хранения.
+- `recovery`: проверенная инструкция, `drill_performed_at`, целостность/изоляция/подтверждение проверяющего, измеренные/целевые RPO/RTO в часах. Испытание позже даты сбора запрещено.
 
-Отсутствующий/not_collected раздел → not_run. Error state → unknown. Неполный inventory не дает pass; отдельный известный breach может дать fail. Gen1/unsupported VM или отключенное требование → not_run с причиной. Исключение через --exclude HV-XX отображается, не скрывается. Not_run не равен безопасному состоянию. Некорректный input прекращает аудит с exit 2, без partial report.
+Актуальность: `--as-of` — момент оценки UTC, по умолчанию текущий. `--max-evidence-age-days` — 30, `--max-restore-age-days` — 90. Будущие/устаревшие данные дают `unknown`; граница включительна. Для воспроизводимости примеров указывается фиксированный момент. Повторный запуск примера с датой 2026-10-09 не подтверждает актуальность реального хоста.
+
+Отсутствующий раздел или `not_collected` → `not_run`; `error` → `unknown`. Неполный перечень не дает общего `pass`, но известное нарушение может дать `fail`. Gen1/неподдерживаемый профиль или выключенное требование → `not_run` с причиной. `--exclude HV-XX` виден в отчете. `not_run` не означает безопасное состояние. Некорректный вход прекращает аудит с кодом 2 без успешного частичного отчета. Пояснения схемы — на русском; ключи и значения перечислений остаются неизменными.
