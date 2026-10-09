@@ -1,0 +1,37 @@
+name: Offline auditor CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    name: Offline Python 3.12 (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - run: >-
+          python -m pip install --require-hashes --only-binary=:all: -r requirements-dev.lock
+      - run: python -m pip install --no-build-isolation --no-deps -e .
+      - run: python -m coverage run --source=hyperv_opsec_auditor -m unittest discover -s tests -v
+      - run: python -m coverage report --fail-under=85
+      - run: python tools/validate_docs.py
+      - run: python tools/scan_secrets.py
+      - run: python tools/build_release.py
+      - run: python tools/package_smoke.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: matrix.os == 'ubuntu-24.04'
+        with:
+          name: release-candidate
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hyperv-opsec-auditor"
+version = "0.1.0a1"
+description = "Read-only offline Hyper-V security posture auditing from supplied evidence"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{name = "hyperv-opsec-auditor contributors"}]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+  "Topic :: Security",
+]
+dependencies = []
+
+[project.scripts]
+hyperv-opsec-auditor = "hyperv_opsec_auditor.cli:main"
+
+[project.urls]
+Repository = "https://github.com/mejustbox-byte/hyperv-opsec-auditor"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+hyperv_opsec_auditor = ["evidence.schema.json"]
