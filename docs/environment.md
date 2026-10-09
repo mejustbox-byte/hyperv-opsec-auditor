@@ -1,12 +1,12 @@
 # Облачная среда разработки
 
-Рабочий checkout: `/workspace/hyperv-opsec-auditor`. Использовать существующий checkout; отдельный worktree создается только по явному запросу. Документация находится в `docs/`; внешняя папка onboarding не используется.
+Рабочая копия: `/workspace/hyperv-opsec-auditor`. Используйте существующую копию; отдельное рабочее дерево Git создается только по явному запросу. Документация находится в `docs/`, внешняя папка onboarding не используется.
 
 ## Установка с нуля
 
-Из checkout: `bash tools/setup_env.sh`. Script создает `.venv`, устанавливает exact hashed build/test dependencies из `requirements-dev.lock`, editable CLI и запускает validate synthetic fixture. Сохраненный venv не нужен; существующий venv можно переиспользовать. Для чистой установки задайте новый checkout либо сохраните/удалите только venv, созданный вами. Исходные файлы и lockfile не меняются установкой.
+Из корня выполните `bash tools/setup_env.sh`. Скрипт создает `.venv`, устанавливает закрепленные с хешами инструменты из `requirements-dev.lock`, CLI в режиме разработки и проверяет синтетический пример командой `validate`. Сохраненная виртуальная среда не требуется; существующую можно использовать повторно. Для чистой установки сохраняйте или удаляйте только созданную вами среду, не чужие файлы. Исходники и файл зависимостей установкой не меняются.
 
-Python 3.12+ уже предоставлен cloud runtime. Runtime продукта без сторонних dependencies; build/test dependencies требуют PyPI (`pypi.org`, `files.pythonhosted.org`). Подписей/checksums/TLS bypass нет.
+Python 3.12+ предоставлен облачной платформой. Сторонних зависимостей выполнения нет; сборка и тесты используют PyPI (`pypi.org`, `files.pythonhosted.org`). Проверки TLS, подписей и контрольных сумм не отключаются.
 
 ## Проверки и запуск
 
@@ -20,6 +20,6 @@ Python 3.12+ уже предоставлен cloud runtime. Runtime продук
 .venv/bin/hyperv-opsec-auditor audit fixtures/healthy.json --as-of 2026-10-09T00:00:00Z --format json --fail-on incomplete
 ```
 
-Нет фоновых сервисов, портов, платных ресурсов и real credentials. Для реального evidence используйте текущее UTC; фиксированный as-of предназначен для synthetic example. Linux и hosted Windows CI не заменяют Windows Server Hyper-V/HGS/backup/recovery стенд.
+Нет фоновых служб, портов, платных ресурсов и производственных учетных данных. Для реальных предоставленных сведений используйте текущее UTC; фиксированный `--as-of` предназначен для синтетического примера. Linux и CI Python на Windows не заменяют Windows Server Hyper-V/HGS и стенд резервного копирования/восстановления.
 
-Сохраненные `install_script`/`start_skill` описывают этот workflow. Draft save не исполняет script, не публикует среду и не создает credentials. В draft добавлены `api.github.com` и `uploads.github.com` для GitHub API/release; настройки не содержат secret values. Доступность Git push/API подтверждается отдельно; authenticated API может оставаться недоступным независимо от read-only public API и Git push.
+`install_script` и `start_skill` сохранены на русском языке и описывают этот порядок работы. Сохранение черновика не исполняет скрипт, не публикует среду и не создает секреты. Сетевые настройки для GitHub API, загрузки файлов и журналов сохраняются без значений учетных данных; доступ Git/API проверяется отдельно. Workflow нового предварительного выпуска описан в `docs/development.md`.

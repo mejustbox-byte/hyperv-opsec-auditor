@@ -1,5 +1,5 @@
-# Build/test only. Exact versions and all non-yanked wheel SHA256 hashes from PyPI.
-# Install with --require-hashes --only-binary=:all:. Runtime dependencies: none.
+# Только сборка и тесты. Точные версии и SHA256 доступных wheel из PyPI.
+# Установка: --require-hashes --only-binary=:all:. Зависимостей выполнения нет.
 setuptools==80.9.0 \
     --hash=sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922
 wheel==0.45.1 \

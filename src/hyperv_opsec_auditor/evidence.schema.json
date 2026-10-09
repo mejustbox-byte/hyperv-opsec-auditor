@@ -1,32 +1,37 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mejustbox-byte/hyperv-opsec-auditor/evidence-1.0.schema.json",
-  "title": "Hyper-V offline evidence 1.0",
+  "title": "Данные автономного аудита Hyper-V 1.0",
   "type": "object",
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.0"
+      "const": "1.0",
+      "description": "Версия контракта входных данных."
     },
     "synthetic": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Признак полностью вымышленных данных."
     },
     "scope": {
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
       "maxLength": 64,
-      "minLength": 1
+      "minLength": 1,
+      "description": "Короткий псевдоним области аудита."
     },
     "collected_at": {
       "type": "string",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$(?![\\s\\S])",
-      "maxLength": 20
+      "maxLength": 20,
+      "description": "Дата сбора в UTC: YYYY-MM-DDTHH:MM:SSZ."
     },
     "evidence_source": {
       "type": "string",
       "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
       "maxLength": 64,
-      "minLength": 1
+      "minLength": 1,
+      "description": "Псевдоним источника предоставленных данных."
     },
     "host": {
       "type": "object",
@@ -37,37 +42,43 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "hyperv_role_enabled": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Роль Hyper-V включена."
         },
         "supported_configuration": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Владелец подтвердил поддержку конфигурации."
         },
         "supported_build": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Владелец подтвердил поддержку сборки."
         },
         "security_updates_current": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Обновления безопасности соответствуют утвержденной политике."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Сведения о роли, поддерживаемости и обновлениях хоста."
     },
     "administration": {
       "type": "object",
@@ -78,7 +89,8 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "actual_admins": {
           "type": "array",
@@ -90,7 +102,8 @@
           },
           "maxItems": 1000,
           "minItems": 0,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Псевдонимы фактических администраторов."
         },
         "approved_admins": {
           "type": "array",
@@ -102,31 +115,36 @@
           },
           "maxItems": 1000,
           "minItems": 0,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Псевдонимы утвержденных администраторов."
         },
         "effective_rights_reviewed": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Владелец отдельно проверил эффективные права."
         },
         "separate_management_accounts": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Учетные записи управления отделены."
         },
         "management_network_isolated": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Сеть управления изолирована согласно проверке владельца."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Права и изоляция управления."
     },
     "winrm": {
       "type": "object",
@@ -137,55 +155,64 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "enabled": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "WinRM включен."
         },
         "https_only": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Управление разрешено только через HTTPS."
         },
         "certificate_valid": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Сертификат проверен и действителен."
         },
         "basic_auth_enabled": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Аутентификация Basic включена."
         },
         "allow_unencrypted": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Незашифрованное управление разрешено."
         },
         "firewall_scoped": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Область правил межсетевого экрана ограничена."
         },
         "delegation_restricted": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Делегирование ограничено."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Предоставленная конфигурация WinRM."
     },
     "network": {
       "type": "object",
@@ -196,19 +223,22 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "topology_reviewed": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Ожидаемая топология отдельно проверена."
         },
         "inventory_complete": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Владелец подтвердил полноту перечня объектов."
         },
         "adapters": {
           "type": "array",
@@ -219,7 +249,8 @@
                 "type": "string",
                 "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
                 "maxLength": 64,
-                "minLength": 1
+                "minLength": 1,
+                "description": "Уникальный псевдоним объекта в пределах раздела."
               },
               "switch_type": {
                 "type": "string",
@@ -227,7 +258,8 @@
                   "external",
                   "internal",
                   "private"
-                ]
+                ],
+                "description": "Фактический тип коммутатора."
               },
               "expected_switch_type": {
                 "type": "string",
@@ -235,7 +267,8 @@
                   "external",
                   "internal",
                   "private"
-                ]
+                ],
+                "description": "Утвержденный ожидаемый тип коммутатора."
               },
               "vlans": {
                 "type": "array",
@@ -246,7 +279,8 @@
                 },
                 "maxItems": 1000,
                 "minItems": 0,
-                "uniqueItems": true
+                "uniqueItems": true,
+                "description": "Фактические VLAN 1..4094."
               },
               "allowed_vlans": {
                 "type": "array",
@@ -257,31 +291,36 @@
                 },
                 "maxItems": 1000,
                 "minItems": 0,
-                "uniqueItems": true
+                "uniqueItems": true,
+                "description": "Утвержденные разрешенные VLAN 1..4094."
               },
               "trunk": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Транк включен."
               },
               "allow_trunk": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Транк разрешен политикой."
               },
               "sriov": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "SR-IOV включен."
               },
               "allow_sriov": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "SR-IOV разрешен политикой."
               }
             },
             "required": [
@@ -291,13 +330,15 @@
           },
           "maxItems": 1000,
           "minItems": 0,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Перечень адаптеров."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Проверенный перечень виртуальных сетевых адаптеров."
     },
     "virtual_machines": {
       "type": "object",
@@ -308,13 +349,15 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "inventory_complete": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Владелец подтвердил полноту перечня объектов."
         },
         "vms": {
           "type": "array",
@@ -325,74 +368,86 @@
                 "type": "string",
                 "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
                 "maxLength": 64,
-                "minLength": 1
+                "minLength": 1,
+                "description": "Уникальный псевдоним объекта в пределах раздела."
               },
               "generation": {
                 "type": "integer",
                 "enum": [
                   1,
                   2
-                ]
+                ],
+                "description": "Поколение VM: 1 или 2."
               },
               "profile_supported": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Владелец подтвердил поддержку профиля VM."
               },
               "require_secure_boot": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Политика требует Secure Boot."
               },
               "secure_boot_enabled": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Secure Boot включен."
               },
               "secure_boot_template_approved": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Шаблон доверия Secure Boot утвержден."
               },
               "require_vtpm": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Политика требует vTPM."
               },
               "vtpm_enabled": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "vTPM включен."
               },
               "require_shielding": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Политика требует Shielded VM."
               },
               "shielded": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "VM действительно является Shielded VM; одного vTPM недостаточно."
               },
               "key_protector_valid": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Защитник ключей проверен и действителен."
               },
               "hgs_attestation_valid": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Владелец подтвердил аттестацию HGS."
               }
             },
             "required": [
@@ -403,13 +458,15 @@
           },
           "maxItems": 1000,
           "minItems": 0,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Перечень виртуальных машин."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Перечень VM и политика защиты."
     },
     "storage": {
       "type": "object",
@@ -420,13 +477,15 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "inventory_complete": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Владелец подтвердил полноту перечня объектов."
         },
         "assets": {
           "type": "array",
@@ -437,13 +496,15 @@
                 "type": "string",
                 "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$(?![\\s\\S])",
                 "maxLength": 64,
-                "minLength": 1
+                "minLength": 1,
+                "description": "Уникальный псевдоним объекта в пределах раздела."
               },
               "effective_acl_reviewed": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Владелец проверил эффективные ACL."
               },
               "unapproved_principals": {
                 "type": "array",
@@ -455,19 +516,22 @@
                 },
                 "maxItems": 1000,
                 "minItems": 0,
-                "uniqueItems": true
+                "uniqueItems": true,
+                "description": "Псевдонимы субъектов с неутвержденным доступом."
               },
               "encrypted": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Объект зашифрован."
               },
               "require_encryption": {
                 "type": [
                   "boolean",
                   "null"
-                ]
+                ],
+                "description": "Политика требует шифрование."
               }
             },
             "required": [
@@ -477,13 +541,15 @@
           },
           "maxItems": 1000,
           "minItems": 0,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "description": "Перечень VHDX, контрольных точек, конфигураций и объектов копирования."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Объекты хранилища и эффективные права."
     },
     "backup": {
       "type": "object",
@@ -494,37 +560,43 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "independent_copy": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Имеется независимая резервная копия."
         },
         "immutable_or_offline": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Копия неизменяема или автономна."
         },
         "separate_identity": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Копирование использует отдельную учетную запись."
         },
         "checkpoint_only": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Защита ограничена контрольными точками, а не резервной копией."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Независимость и защита резервных копий."
     },
     "logging": {
       "type": "object",
@@ -535,25 +607,29 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "audit_enabled": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Утвержденный аудит включен."
         },
         "central_delivery_verified": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Владелец подтвердил доставку журналов внешнему получателю."
         },
         "tamper_protection": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Защита журналов от подмены подтверждена."
         },
         "retention_days": {
           "type": [
@@ -561,7 +637,8 @@
             "null"
           ],
           "minimum": 0,
-          "maximum": 3650
+          "maximum": 3650,
+          "description": "Фактический срок хранения в днях."
         },
         "required_retention_days": {
           "type": [
@@ -569,13 +646,15 @@
             "null"
           ],
           "minimum": 1,
-          "maximum": 3650
+          "maximum": 3650,
+          "description": "Утвержденный необходимый срок хранения в днях."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Аудит, доставка и хранение журналов."
     },
     "recovery": {
       "type": "object",
@@ -586,13 +665,15 @@
             "ok",
             "error",
             "not_collected"
-          ]
+          ],
+          "description": "Состояние сбора: ok — собран, error — сбой, not_collected — не собран."
         },
         "runbook_reviewed": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Инструкция восстановления проверена."
         },
         "drill_performed_at": {
           "type": [
@@ -600,25 +681,29 @@
             "null"
           ],
           "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$(?![\\s\\S])",
-          "maxLength": 20
+          "maxLength": 20,
+          "description": "Дата учебного восстановления UTC; отсутствие не дает pass."
         },
         "integrity_verified": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Целостность восстановленных данных проверена."
         },
         "isolated_restore": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Восстановление выполнено в изолированном контуре."
         },
         "reviewer_approved": {
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "description": "Результаты подтверждены проверяющим."
         },
         "measured_rpo_hours": {
           "type": [
@@ -626,7 +711,8 @@
             "null"
           ],
           "minimum": 0,
-          "maximum": 1000000
+          "maximum": 1000000,
+          "description": "Измеренный RPO в часах."
         },
         "target_rpo_hours": {
           "type": [
@@ -634,7 +720,8 @@
             "null"
           ],
           "minimum": 0,
-          "maximum": 1000000
+          "maximum": 1000000,
+          "description": "Утвержденная цель RPO в часах."
         },
         "measured_rto_hours": {
           "type": [
@@ -642,7 +729,8 @@
             "null"
           ],
           "minimum": 0,
-          "maximum": 1000000
+          "maximum": 1000000,
+          "description": "Измеренный RTO в часах."
         },
         "target_rto_hours": {
           "type": [
@@ -650,13 +738,15 @@
             "null"
           ],
           "minimum": 0,
-          "maximum": 1000000
+          "maximum": 1000000,
+          "description": "Утвержденная цель RTO в часах."
         }
       },
       "required": [
         "state"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Протокол учебного восстановления и цели RPO/RTO."
     }
   },
   "required": [
@@ -666,5 +756,6 @@
     "collected_at",
     "evidence_source"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "description": "Схема предоставленных владельцем сведений. Проверяет структуру, а не истинность или состояние реальной инфраструктуры."
 }

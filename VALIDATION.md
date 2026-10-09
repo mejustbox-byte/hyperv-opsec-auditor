@@ -1,14 +1,17 @@
-# Validation record — 0.1.0a1
+# Протокол проверки — 0.1.0a2
 
-Current cloud machine: Linux, Python 3.12.14. All evidence is fictional.
+Облачная машина: Linux, Python 3.12.14. Все входные данные вымышлены. В текущей машине проверено: 42 теста прошли, покрытие 96% (порог 85%), 33 обязательных документа и локальные ссылки, три синтетических сценария. В 66 публичных файлах известные шаблоны учетных данных не найдены. Установка без сохраненной venv и повторный запуск tools/setup_env.sh прошли. Библиотечный пример дал 10 pass по вымышленным данным.
 
-- Unit/integration suite: 38 tests passed, including malformed input, every rule family, freshness, no-mutation and exclusive output checks.
-- External JSON Schema validation parity tested using pinned jsonschema 4.26.0.
-- Coverage: 96% (minimum 85%); documentation links and three schema-valid synthetic fixtures passed.
-- Public-file credential-pattern scan: no matches; this is not a comprehensive secret audit.
-- Pinned/hash-verified dependencies installed in a fresh venv; wheel installed without runtime dependencies. Own sdist rebuilt and installed in a second clean venv; both ran validate/audit successfully.
-- SHA256SUMS checked against every prepared local asset.
-- GitHub Actions workflow is configured for Ubuntu and Windows hosted offline tests. Actual remote run status must be checked separately.
-- Real Windows Server Hyper-V, WinRM, AD/effective ACL, VLAN isolation, supported Secure Boot/vTPM/Shielded/HGS and backup/recovery tests: NOT RUN.
+Выполнены:
 
-A pass in synthetic evidence is not a statement about a real host. Release candidate files are local until GitHub release publication is verified.
+- Модульные и интеграционные тесты: некорректный ввод, каждое семейство правил, актуальность, неизменность входа и создание отчетов без перезаписи.
+- Совпадение проверки со схемой JSON через закрепленный `jsonschema 4.26.0` и проверка русских пользовательских текстов.
+- Покрытие кода с минимальным порогом 85%, локальные ссылки и три синтетических сценария.
+- Поиск известных шаблонов учетных данных в публичных файлах; это не полный аудит секретов.
+- Установка закрепленных зависимостей с проверкой хешей в новой среде, установка wheel без сторонних зависимостей, повторная сборка и чистая установка sdist.
+- Проверка License-Expression MIT и двух файлов LICENSE/ LICENSE.ru.md в wheel и sdist, совпадения лицензий с исходниками и наличия всех корневых документов в sdist.
+- Проверка `SHA256SUMS` для подготовленных файлов; после публикации — скачивание и проверка опубликованных файлов и запуск CLI из опубликованного wheel.
+
+CI выполняет автономные тесты на Ubuntu и Windows. Тест символических ссылок POSIX на Windows пропускается с указанной причиной. Фактические результаты нового CI и публикации нужно подтверждать по соответствующему запуску, не переносить из старого выпуска.
+
+Реальные Windows Server Hyper-V, WinRM, AD/эффективные ACL, изоляция VLAN, поддерживаемые Secure Boot/vTPM/Shielded VM/HGS, резервное копирование и восстановление: **НЕ ВЫПОЛНЕНЫ**. Синтетический `pass` ничего не доказывает о реальном хосте. Наличие локальных файлов не означает публикацию GitHub Release.

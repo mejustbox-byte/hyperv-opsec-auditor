@@ -1,27 +1,27 @@
-"""Deterministic offline rules. No host access or remediation execution."""
+"""Детерминированные автономные правила без доступа к хосту и исправления настроек."""
 from datetime import datetime, timezone
 from . import __version__
 from .validation import InputError, parse_utc, validate_evidence
 
 POLICY_VERSION = 'mvp-baseline-1.0'
 RULES = {
-    'HV-01': ('Host support and updates', 'high', 'Review the supported host/build profile, enable the approved Hyper-V role and apply approved security updates.'),
-    'HV-02': ('Management privileges', 'critical', 'Review effective administrator rights, remove unapproved grants through an authorized change, and separate management accounts and networks.'),
-    'HV-03': ('WinRM management security', 'high', 'Review HTTPS/certificate, disable Basic and unencrypted management, restrict firewall scope and delegation through an authorized change.'),
-    'HV-04': ('Virtual network isolation', 'high', 'Review the approved topology, VLAN allowlist, switch type, trunk and SR-IOV exceptions; validate isolation in the lab.'),
-    'HV-05': ('VM Secure Boot', 'high', 'For supported generation 2 profiles, enable the approved Secure Boot trust template through a reviewed change.'),
-    'HV-06': ('VM TPM and shielding', 'high', 'Review vTPM requirements separately from shielding; verify key protection and HGS trust in a supported lab.'),
-    'HV-07': ('Virtual storage protection', 'critical', 'Review effective VHDX/checkpoint/config/backup access, remove unapproved principals and enforce approved encryption.'),
-    'HV-08': ('Independent protected backups', 'critical', 'Use independent immutable or offline copies and separate backup identities. Checkpoints are not backups.'),
-    'HV-09': ('Audit logging', 'medium', 'Enable approved auditing, validate central delivery and tamper protection, and meet the required retention period.'),
-    'HV-10': ('Verified recovery readiness', 'critical', 'Perform an authorized isolated restore drill without malware; verify integrity and document measured RPO/RTO, reviewer and runbook.'),
+    'HV-01': ('Поддержка хоста и обновления', 'high', 'Проверьте поддерживаемость хоста и сборки; в рамках разрешенного изменения включите утвержденную роль Hyper-V и установите утвержденные обновления безопасности.'),
+    'HV-02': ('Права управления', 'critical', 'Проверьте эффективные административные права; разрешенным изменением удалите неутвержденные права и разделите учетные записи и сети управления.'),
+    'HV-03': ('Безопасность управления WinRM', 'high', 'Проверьте HTTPS и сертификат; разрешенным изменением отключите Basic и незашифрованное управление, ограничьте правила межсетевого экрана и делегирование.'),
+    'HV-04': ('Изоляция виртуальной сети', 'high', 'Проверьте утвержденную топологию, разрешенные VLAN, тип коммутатора, исключения для транков и SR-IOV; подтвердите изоляцию на стенде.'),
+    'HV-05': ('Secure Boot виртуальной машины', 'high', 'Для поддерживаемых профилей Gen2 включите утвержденный шаблон доверия Secure Boot в рамках проверенного изменения.'),
+    'HV-06': ('vTPM и защита Shielded VM', 'high', 'Проверьте требования vTPM отдельно от Shielded VM; подтвердите защиту ключей и доверие HGS на поддерживаемом стенде.'),
+    'HV-07': ('Защита виртуального хранилища', 'critical', 'Проверьте эффективный доступ к VHDX, контрольным точкам, конфигурациям и копиям; удалите неутвержденные права и обеспечьте требуемое шифрование разрешенным изменением.'),
+    'HV-08': ('Независимые защищенные резервные копии', 'critical', 'Используйте независимые неизменяемые или автономные копии и отдельные учетные записи резервного копирования. Контрольные точки не являются резервными копиями.'),
+    'HV-09': ('Журналирование аудита', 'medium', 'Включите утвержденный аудит, подтвердите централизованную доставку и защиту от подмены, обеспечьте требуемый срок хранения.'),
+    'HV-10': ('Проверенная готовность к восстановлению', 'critical', 'Проведите разрешенное изолированное учебное восстановление без вредоносных программ; проверьте целостность, документируйте RPO/RTO, проверяющего и инструкцию.'),
 }
 SECTIONS = {'HV-01':'host','HV-02':'administration','HV-03':'winrm','HV-04':'network','HV-05':'virtual_machines','HV-06':'virtual_machines','HV-07':'storage','HV-08':'backup','HV-09':'logging','HV-10':'recovery'}
 LIMITATIONS = [
-    'Offline evaluation of supplied evidence; no live Hyper-V, WinRM, network or backup access.',
-    'Support, effective rights, isolation and restore attestations are supplied by the evidence owner, not independently verified.',
-    'Synthetic results do not validate real infrastructure. Actual Windows Hyper-V/HGS and recovery tests are NOT RUN.',
-    'No configuration changes or remediation are executed. Reports can contain sensitive pseudonymous evidence.',
+    'Автономная оценка предоставленных данных без доступа к Hyper-V, WinRM, сети и резервным копиям.',
+    'Поддержка, эффективные права, изоляция и восстановление подтверждаются владельцем данных, а не независимой проверкой аудитора.',
+    'Синтетические результаты не проверяют реальную инфраструктуру. Реальные испытания Windows Hyper-V/HGS и восстановления НЕ ВЫПОЛНЕНЫ.',
+    'Изменения и исправления настроек не выполняются. Отчеты могут содержать конфиденциальные данные даже с псевдонимами.',
 ]
 
 class Checks:
@@ -47,10 +47,10 @@ class Checks:
 
     def result(self):
         if self.failures:
-            return 'fail', 'Evidence violates the baseline: ' + ', '.join(self.failures) + '.'
+            return 'fail', 'Данные нарушают базовую политику: ' + ', '.join(self.failures) + '.'
         if self.missing:
-            return 'unknown', 'Required evidence is missing or null: ' + ', '.join(self.missing) + '.'
-        return 'pass', 'All required supplied evidence for this rule matches the baseline.'
+            return 'unknown', 'Необходимые данные отсутствуют или равны null: ' + ', '.join(self.missing) + '.'
+        return 'pass', 'Все необходимые предоставленные данные правила соответствуют базовой политике.'
 
 def finding(rule_id, asset, status, rationale, evidence=()):
     title, severity, remediation = RULES[rule_id]
@@ -63,11 +63,11 @@ def _vm_findings(rule, section, document):
     result = []
     vms = section.get('vms')
     if section.get('inventory_complete') is not True:
-        result.append(finding(rule, document['scope'], 'unknown', 'VM inventory completeness is not confirmed.'))
+        result.append(finding(rule, document['scope'], 'unknown', 'Полнота перечня VM не подтверждена.'))
     if vms is None:
-        return result or [finding(rule, document['scope'], 'unknown', 'VM inventory is missing.')]
+        return result or [finding(rule, document['scope'], 'unknown', 'Перечень VM отсутствует.')]
     if not vms:
-        return result or [finding(rule, document['scope'], 'not_run', 'Complete inventory declares no VMs; no VM configuration was tested.')]
+        return result or [finding(rule, document['scope'], 'not_run', 'Полный перечень не содержит VM; конфигурации VM не проверялись.')]
     host_supported = document.get('host', {}).get('supported_configuration')
     host_state = document.get('host', {}).get('state')
     for index, vm in enumerate(vms):
@@ -75,23 +75,23 @@ def _vm_findings(rule, section, document):
         evidence = [{'pointer':pointer+'/generation','observed':vm['generation']},
                     {'pointer':pointer+'/profile_supported','observed':vm.get('profile_supported')}]
         if vm['generation'] == 1:
-            result.append(finding(rule, vm['id'], 'not_run', 'Generation 1 is outside the Secure Boot/vTPM/shielding applicability profile.', evidence))
+            result.append(finding(rule, vm['id'], 'not_run', 'Gen1 вне профиля применимости Secure Boot/vTPM/Shielded VM.', evidence))
             continue
         if vm.get('profile_supported') is False or host_supported is False:
-            result.append(finding(rule, vm['id'], 'not_run', 'Declared unsupported profile; VM protection is not validated.', evidence))
+            result.append(finding(rule, vm['id'], 'not_run', 'Заявлен неподдерживаемый профиль; защита VM не проверена.', evidence))
             continue
         if vm.get('profile_supported') is not True or host_supported is not True or host_state != 'ok':
-            result.append(finding(rule, vm['id'], 'unknown', 'Supported VM and host profile evidence is incomplete.', evidence))
+            result.append(finding(rule, vm['id'], 'unknown', 'Данные о поддерживаемом профиле VM и хоста неполны.', evidence))
             continue
         checks = Checks(vm, pointer)
         checks.evidence.extend(evidence)
         if rule == 'HV-05':
             required = vm.get('require_secure_boot')
             if required is False:
-                result.append(finding(rule, vm['id'], 'not_run', 'Secure Boot is not required by the supplied profile.', evidence))
+                result.append(finding(rule, vm['id'], 'not_run', 'Secure Boot не требуется предоставленным профилем.', evidence))
                 continue
             if required is None:
-                result.append(finding(rule, vm['id'], 'unknown', 'Secure Boot applicability requirement is missing.', evidence))
+                result.append(finding(rule, vm['id'], 'unknown', 'Требование применимости Secure Boot отсутствует.', evidence))
                 continue
             checks.expect('require_secure_boot', True)
             checks.expect('secure_boot_enabled', True)
@@ -99,7 +99,7 @@ def _vm_findings(rule, section, document):
         else:
             tpm, shielding = vm.get('require_vtpm'), vm.get('require_shielding')
             if tpm is False and shielding is False:
-                result.append(finding(rule, vm['id'], 'not_run', 'Neither vTPM nor shielding is required by the supplied profile.', evidence))
+                result.append(finding(rule, vm['id'], 'not_run', 'Предоставленный профиль не требует vTPM или Shielded VM.', evidence))
                 continue
             for name in ('require_vtpm','require_shielding'):
                 if vm.get(name) is None:
@@ -124,10 +124,10 @@ def _evaluate(rule, data, document, as_of, max_restore_age_days):
     elif rule == 'HV-02':
         for key in ('effective_rights_reviewed','separate_management_accounts','management_network_isolated'):
             c.expect(key, True)
-        c.compare('actual_admins','approved_admins',lambda a,b:set(a)<=set(b),'unapproved administrators')
+        c.compare('actual_admins','approved_admins',lambda a,b:set(a)<=set(b),'неутвержденные администраторы')
     elif rule == 'HV-03':
         if data.get('enabled') is False:
-            return [finding(rule, scope, 'not_run', 'WinRM is declared disabled; no active listener was tested.', [{'pointer':'/winrm/enabled','observed':False}])]
+            return [finding(rule, scope, 'not_run', 'WinRM заявлен выключенным; активные слушатели не проверялись.', [{'pointer':'/winrm/enabled','observed':False}])]
         c.expect('enabled', True)
         for key in ('https_only','certificate_valid','firewall_scoped','delegation_restricted'):
             c.expect(key, True)
@@ -135,30 +135,30 @@ def _evaluate(rule, data, document, as_of, max_restore_age_days):
         c.expect('allow_unencrypted', False)
     elif rule == 'HV-04':
         c.expect('topology_reviewed', True)
-        # Incomplete inventories are unknown, not a confirmed insecure setting.
+        # Неполные перечни означают unknown, а не подтвержденное нарушение.
         if data.get('inventory_complete') is not True:
-            c.missing.append('complete adapter inventory')
+            c.missing.append('полный перечень адаптеров')
         adapters = data.get('adapters')
         if adapters is None:
             c.missing.append('adapters')
         elif not adapters and not c.missing and not c.failures:
-            return [finding(rule, scope, 'not_run', 'Complete inventory declares no network adapters.')]
+            return [finding(rule, scope, 'not_run', 'Полный перечень не содержит сетевых адаптеров.')]
         else:
             for index, adapter in enumerate(adapters):
                 part = Checks(adapter, f'/network/adapters/{index}')
-                part.compare('switch_type','expected_switch_type',lambda a,b:a==b,'switch type mismatch')
-                part.compare('vlans','allowed_vlans',lambda a,b:bool(a) and set(a)<=set(b),'VLAN outside approved scope or empty VLAN set')
-                part.compare('trunk','allow_trunk',lambda a,b:not a or b,'unapproved trunk')
-                part.compare('sriov','allow_sriov',lambda a,b:not a or b,'unapproved SR-IOV')
+                part.compare('switch_type','expected_switch_type',lambda a,b:a==b,'несоответствие типа коммутатора')
+                part.compare('vlans','allowed_vlans',lambda a,b:bool(a) and set(a)<=set(b),'VLAN вне утвержденной области или пустой набор VLAN')
+                part.compare('trunk','allow_trunk',lambda a,b:not a or b,'неутвержденный транк')
+                part.compare('sriov','allow_sriov',lambda a,b:not a or b,'неутвержденный SR-IOV')
                 c.evidence.extend(part.evidence); c.failures.extend(part.failures); c.missing.extend(part.missing)
     elif rule == 'HV-07':
         if data.get('inventory_complete') is not True:
-            c.missing.append('complete storage inventory')
+            c.missing.append('полный перечень хранилища')
         assets = data.get('assets')
         if assets is None:
             c.missing.append('assets')
         elif not assets and not c.missing:
-            return [finding(rule, scope, 'not_run', 'Complete inventory declares no storage assets.')]
+            return [finding(rule, scope, 'not_run', 'Полный перечень не содержит объектов хранилища.')]
         else:
             for index, asset in enumerate(assets):
                 part = Checks(asset, f'/storage/assets/{index}')
@@ -178,49 +178,49 @@ def _evaluate(rule, data, document, as_of, max_restore_age_days):
     elif rule == 'HV-09':
         for key in ('audit_enabled','central_delivery_verified','tamper_protection'):
             c.expect(key, True)
-        c.compare('retention_days','required_retention_days',lambda a,b:a>=b,'insufficient log retention')
+        c.compare('retention_days','required_retention_days',lambda a,b:a>=b,'недостаточный срок хранения журналов')
     elif rule == 'HV-10':
         drill = data.get('drill_performed_at')
         c.evidence.append({'pointer':'/recovery/drill_performed_at','observed':drill})
-        # A stale or absent drill cannot establish recovery readiness, including failure.
+        # Устаревшее или отсутствующее испытание не устанавливает результат готовности.
         if drill is None:
-            return [finding(rule, scope, 'unknown', 'No dated restore drill evidence was supplied.', c.evidence)]
+            return [finding(rule, scope, 'unknown', 'Датированные данные учебного восстановления не предоставлены.', c.evidence)]
         age = (as_of - parse_utc(drill)).total_seconds()/86400
         if age < 0 or age > max_restore_age_days:
-            return [finding(rule, scope, 'unknown', 'Restore drill is outside the allowed freshness window.', c.evidence)]
+            return [finding(rule, scope, 'unknown', 'Учебное восстановление вне допустимого срока актуальности.', c.evidence)]
         for key in ('runbook_reviewed','integrity_verified','isolated_restore','reviewer_approved'):
             c.expect(key, True)
         for metric in ('rpo','rto'):
-            c.compare(f'measured_{metric}_hours',f'target_{metric}_hours',lambda a,b:a<=b,f'{metric.upper()} exceeds target')
+            c.compare(f'measured_{metric}_hours',f'target_{metric}_hours',lambda a,b:a<=b,f'{metric.upper()} превышает цель')
     return [from_checks(rule, scope, c)]
 
 def audit(document, *, as_of=None, max_evidence_age_days=30, max_restore_age_days=90, exclude=()):
-    """Validate and evaluate evidence; timestamps and policy bounds are explicit."""
+    """Проверка и оценка данных с явными датами и границами политики."""
     validate_evidence(document)
     if as_of is None:
         as_of = datetime.now(timezone.utc).replace(microsecond=0)
     elif isinstance(as_of, str):
         as_of = parse_utc(as_of)
     if not isinstance(as_of, datetime) or as_of.tzinfo is None or as_of.utcoffset() is None:
-        raise InputError('as_of must be a timezone-aware datetime or UTC string')
+        raise InputError('as_of должен быть датой с часовым поясом или строкой UTC')
     for limit in (max_evidence_age_days,max_restore_age_days):
         if type(limit) is not int or not 1 <= limit <= 3650:
-            raise InputError('Freshness limits must be integers between 1 and 3650 days')
+            raise InputError('Лимиты актуальности должны быть целыми числами от 1 до 3650 дней')
     if not set(exclude) <= RULES.keys():
-        raise InputError('Unknown excluded rule ID')
+        raise InputError('Неизвестный идентификатор исключенного правила')
     as_of = as_of.astimezone(timezone.utc)
     age = (as_of-parse_utc(document['collected_at'])).total_seconds()/86400
     results = []
     for rule in RULES:
         section = document.get(SECTIONS[rule])
         if rule in exclude:
-            results.append(finding(rule, document['scope'], 'not_run', 'Explicitly excluded by the operator.'))
+            results.append(finding(rule, document['scope'], 'not_run', 'Явно исключено оператором.'))
         elif section is None or section['state'] == 'not_collected':
-            results.append(finding(rule, document['scope'], 'not_run', 'Evidence section was not collected.'))
+            results.append(finding(rule, document['scope'], 'not_run', 'Данные раздела не собраны.'))
         elif age < 0 or age > max_evidence_age_days:
-            results.append(finding(rule, document['scope'], 'unknown', 'Evidence is outside the allowed freshness window.'))
+            results.append(finding(rule, document['scope'], 'unknown', 'Данные вне допустимого срока актуальности.'))
         elif section['state'] == 'error':
-            results.append(finding(rule, document['scope'], 'unknown', 'Evidence collection failed; supplied values were not evaluated.'))
+            results.append(finding(rule, document['scope'], 'unknown', 'Сбой сбора данных; предоставленные значения не оценивались.'))
         else:
             results.extend(_evaluate(rule,section,document,as_of,max_restore_age_days))
     counts = {status:sum(item['status']==status for item in results) for status in ('pass','fail','unknown','not_run')}

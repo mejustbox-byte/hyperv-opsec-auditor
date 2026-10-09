@@ -59,7 +59,7 @@ class RuleTests(unittest.TestCase):
 
     def test_exclusion_is_visible(self):
         result=evaluate(healthy(),'HV-02',exclude=['HV-02'])[0]
-        self.assertEqual(result['status'],'not_run'); self.assertIn('excluded',result['rationale'])
+        self.assertEqual(result['status'],'not_run'); self.assertIn('исключено',result['rationale'])
         with self.assertRaises(InputError): audit(healthy(),as_of=AS_OF,exclude=['bad'])
 
     def test_winrm_disabled_is_not_run(self):

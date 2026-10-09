@@ -1,6 +1,6 @@
 # Разработка и CI
 
-Использовать существующий checkout `/workspace/hyperv-opsec-auditor`; не создавать worktree без явного запроса. Python >=3.12, Git. Runtime зависимостей нет, build/test tools зафиксированы с hashes в requirements-dev.lock. Secrets и службы не нужны.
+Используйте существующую рабочую копию `/workspace/hyperv-opsec-auditor`; не создавайте отдельное рабочее дерево без явного запроса. Требуются Git и Python >=3.12. Сторонних зависимостей выполнения нет; инструменты сборки и тестов закреплены с хешами в `requirements-dev.lock`. Секреты и службы не нужны.
 
 ```bash
 python3 -m venv .venv
@@ -14,14 +14,14 @@ python3 -m venv .venv
 .venv/bin/python tools/package_smoke.py
 ```
 
-CI на Ubuntu и Windows hosted runners запускает offline тесты, проверку документации/секретов, pinned build, sdist rebuild и установку wheel в clean venv. Linux coverage порог 85% для модулей, CLI дополнительно проверяется subprocess integration tests. Никаких real Hyper-V/WinRM/HGS/backup connections или self-hosted runners. Windows POSIX-symlink case skipped с явной причиной. Actions pinned SHA. Недоверенные PR не должны запускаться на будущем приватном стенде.
+CI на Ubuntu и Windows использует предоставленных GitHub исполнителей: автономные тесты, проверка документации и секретов, закрепленная сборка, пересборка sdist и установка wheel в чистую среду. Порог покрытия — 85%; CLI дополнительно проверяется отдельными процессами. Подключений к Hyper-V/WinRM/HGS и резервному копированию, а также собственных исполнителей нет. Тест символических ссылок POSIX на Windows пропускается с явной причиной. Actions закреплены полными SHA. Недоверенные PR не запускаются на будущем приватном стенде.
 
-Тесты имеют pass/fail/unknown/not_run сценарии, malformed inputs, JSON Schema parity, state/freshness и output safety. Нулевой test run не допускается как readiness. `tools/build_release.py` готовит wheel/sdist, copies synthetic examples/schema/release notes и SHA256SUMS; `tools/package_smoke.py` проверяет повторную сборку из sdist и install-only runtime без сторонних пакетов. Эти команды не публикуют release.
+Проверяются `pass`/`fail`/`unknown`/`not_run`, некорректный ввод, совпадение с JSON Schema, состояние сбора, актуальность, безопасность файлов и русский текст. Нулевое число выполненных тестов не подтверждает готовность. `tools/build_release.py` создает wheel/sdist, копирует синтетические примеры, схему, сведения о выпуске и SHA256SUMS. `tools/package_smoke.py` проверяет пересборку из sdist и чистую установку без сторонних зависимостей выполнения. Эти команды не публикуют выпуск.
 
-Перед commit: diff review и pattern secret scan, который не является гарантией отсутствия любых секретов. Реальные отчеты/evidence хранить вне checkout; игнорируемый reports/ не защищает от force-add. Проверки и публикация описываются по фактическому результату, local success не заменяет remote CI.
+Перед commit проверьте изменения и известные шаблоны секретов; это не гарантирует отсутствия любых секретов. Реальные сведения и отчеты храните вне рабочей копии. Игнорируемый `reports/` не защищает от принудительного добавления. Локальный успех не заменяет удаленный CI.
 
-## Prerelease delivery
+## Доставка предварительного выпуска
 
-`.github/workflows/release.yml` is manually dispatched only on `main`. It checks out the exact dispatch SHA, verifies the package version, runs the offline tests/checks/build/clean-install smoke and publishes `v0.1.0a1` with all `dist/` assets. Only its publish job has contents:write; the GitHub-issued short-lived token is supplied only to the publish step, never stored in source. Checkout does not persist credentials. A rerun can replace this version's assets only if its existing tag resolves to the same source SHA; a mismatched tag stops publication.
+`.github/workflows/release.yml` запускается вручную только на `main`. Он извлекает точный SHA запуска, проверяет версию `0.1.0a2`, выполняет тесты, проверки, сборку и чистую установку, затем публикует `v0.1.0a2` со всеми файлами `dist/`. Задание публикации имеет `contents:write`; переменная `GH_TOKEN` задается только на шаге публикации штатным краткоживущим токеном GitHub. При извлечении исходников учетные данные не сохраняются. Повторный запуск заменяет файлы только при совпадении существующего тега с тем же SHA; несовпадение останавливает публикацию. Старый `v0.1.0a1` не изменяется.
 
-Cloud `gh` upload authentication can differ from Git/API access. Use the Actions workflow through an authorized GitHub connection rather than extracting or copying credentials. No production credentials are needed. This publishes a GitHub prerelease, not the cloud environment; environment draft review/publication remains a separate product operation.
+Аутентификация загрузки файлов из облачного `gh` может отличаться от доступа Git/API. Используйте разрешенное подключение и Actions, не извлекайте и не копируйте учетные данные. Производственные секреты не нужны. Публикация GitHub Release и публикация облачной среды — разные операции; проверка и публикация черновика среды выполняются отдельно в интерфейсе продукта.

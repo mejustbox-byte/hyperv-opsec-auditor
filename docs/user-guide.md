@@ -1,25 +1,26 @@
-# User guide / инструкция пользователя
+# Руководство пользователя
 
-## Requirements and installation
-Python >=3.12. The wheel is platform independent, with **no runtime dependencies**. Windows execution is offline Python evaluation, not Hyper-V collection.
+## Требования и установка
 
-From a wheel asset or locally prepared `dist/` directory, verify `SHA256SUMS` against the downloaded wheel. This detects corruption; an unsigned checksum from the same source does not authenticate the publisher. Install without contacting a package index:
+Требуется Python >=3.12. Пакет wheel не зависит от платформы и **не требует сторонних библиотек для выполнения**. На Windows он также оценивает предоставленные данные автономно, а не собирает их из Hyper-V.
+
+Для скачанного wheel или подготовленного каталога `dist/` проверьте файл `SHA256SUMS`. Это обнаруживает повреждение; неподписанная контрольная сумма из того же источника не подтверждает личность издателя. Установите пакет без обращения к индексу:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install --no-index --no-deps ./dist/hyperv_opsec_auditor-0.1.0a1-py3-none-any.whl
+.venv/bin/python -m pip install --no-index --no-deps ./dist/hyperv_opsec_auditor-0.1.0a2-py3-none-any.whl
 .venv/bin/hyperv-opsec-auditor --version
 ```
 
-Windows PowerShell equivalent (replace the wheel path if downloaded elsewhere):
+Эквивалент для Windows PowerShell; замените путь, если файл скачан в другой каталог:
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --no-index --no-deps .\dist\hyperv_opsec_auditor-0.1.0a1-py3-none-any.whl
+.\.venv\Scripts\python.exe -m pip install --no-index --no-deps .\dist\hyperv_opsec_auditor-0.1.0a2-py3-none-any.whl
 .\.venv\Scripts\hyperv-opsec-auditor.exe --version
 ```
 
-Source installation and development require the pinned build/test tools:
+Установка из исходников и разработка требуют закрепленных инструментов сборки и тестирования:
 
 ```bash
 python3 -m venv .venv
@@ -27,14 +28,15 @@ python3 -m venv .venv
 .venv/bin/python -m pip install --no-build-isolation --no-deps .
 ```
 
-The development lock includes platform wheel hashes, not runtime dependencies. Do not disable TLS/checksum verification. Public release URL and publication status must be confirmed separately; local `dist/` artifacts do not imply a GitHub release.
+Файл зависимостей разработки содержит хеши wheel для разных платформ. Эти пакеты не являются зависимостями выполнения продукта. Проверку TLS и контрольных сумм отключать нельзя. Ссылку и статус публичного выпуска необходимо подтверждать отдельно; локальный `dist/` не означает публикацию GitHub Release. Тег нового выпуска — `v0.1.0a2`, версия пакета — `0.1.0a2`.
 
-## Prepare evidence
-Read [input contract](input-contract.md) and the bundled schema. Start with a synthetic fixture only for learning, not as a production baseline. A qualified owner exports and reviews each section using authorized read-only tools outside this MVP; identifies the scope, masks identifiers, sets synthetic=false, dates the evidence, and approves expected/allowed/required policy fields. Do not store passwords, tokens, private keys, raw identities or real production reports in the public checkout. State error for failed collection, not_collected for skipped collection, and null/absent fields for unknowns. Do not manufacture pass evidence.
+## Подготовка данных
 
-Live Windows collection and automatic redaction are **not implemented**. Pseudonym requirements limit identifiers but do not guarantee anonymization or protect data copied to stdout. Treat the input and output as confidential. A supported Windows lab is required before trusting platform conclusions.
+Изучите [контракт входных данных](input-contract.md) и схему. Синтетический пример используйте только для обучения. Квалифицированный владелец отдельно экспортирует и проверяет каждый раздел разрешенными средствами только для чтения, определяет область аудита, заменяет идентификаторы псевдонимами, задает `synthetic=false`, дату сбора и утверждает ожидаемую политику. Не сохраняйте пароли, токены, закрытые ключи, реальные идентификаторы и производственные отчеты в публичной рабочей копии.
 
-## CLI
+Сбой сбора обозначайте `state=error`, пропуск — `state=not_collected`; неизвестные значения оставляйте отсутствующими или `null`. Не создавайте ложные данные ради `pass`. Сбор с Windows и автоматическое обезличивание **не реализованы**. Псевдонимы не гарантируют анонимность и не защищают данные в stdout. Вход и выход считайте конфиденциальными. Платформенные выводы требуют отдельного поддерживаемого стенда Windows.
+
+## Команды CLI
 
 ```bash
 hyperv-opsec-auditor rules
@@ -43,17 +45,19 @@ hyperv-opsec-auditor audit fixtures/partial.json --as-of 2026-10-09T00:00:00Z --
 hyperv-opsec-auditor audit fixtures/unsafe.json --as-of 2026-10-09T00:00:00Z --format markdown --output /tmp/new-report.md --fail-on fail
 ```
 
-Choose a new output path: existing files/directories/symlinks are rejected, never overwritten. POSIX output files are created mode 0600; Windows privacy follows the destination directory ACL. The input is read only. By default the report goes to stdout and no file is created.
+Укажите новый выходной путь: существующие файлы, каталоги и символические ссылки не перезаписываются. Файлы POSIX создаются с правами 0600; в Windows конфиденциальность определяется ACL каталога назначения. Вход читается без изменения. По умолчанию отчет выводится в stdout без создания файла. Русский текст файлов и CLI использует UTF-8.
 
-Options: --as-of UTC timestamp (default now), --max-evidence-age-days 30, --max-restore-age-days 90 (bounds 1..3650), --exclude HV-XX repeatable, --format json/markdown, --output new-file, --fail-on none/fail/incomplete. Exclusions appear as not_run. JSON and Markdown can be generated by separate commands with the same as-of for identical evaluation.
+Параметры: `--as-of` — момент оценки UTC, по умолчанию текущий; `--max-evidence-age-days` — 30; `--max-restore-age-days` — 90, допустимо 1..3650; `--exclude HV-XX` — повторяемое исключение; `--format json/markdown`; `--output` — новый файл; `--fail-on none/fail/incomplete`. Исключения видны как `not_run`. Для одинаковых JSON и Markdown выводов используйте одинаковый `--as-of` в двух командах.
 
-## Status and exit semantics
-- pass: all required supplied evidence matches the baseline; no independent attestation.
-- fail: a supplied applicable fact violates the baseline.
-- unknown: missing/null/error/stale evidence prevents a conclusion.
-- not_run: absent/uncollected section, explicit exclusion, no inventoried assets or a nonapplicable/unsupported profile. Never treated as pass.
+## Статусы и коды завершения
 
-Default --fail-on none returns 0 after successful processing even for findings. --fail-on fail returns 1 when any finding fails; incomplete returns 1 for fail/unknown/not_run. Invalid input/arguments or I/O error returns 2 and produces no successful audit report. Error messages omit input values. A created report may remain incomplete if a later disk-write error occurs; exit 2 means it must not be used. `validate` validates structure only, without freshness assessment.
+- `pass`: все необходимые предоставленные сведения соответствуют политике; независимой аттестации нет.
+- `fail`: предоставленный применимый факт нарушает политику.
+- `unknown`: отсутствующие, неполные, ошибочные или устаревшие данные не позволяют сделать вывод.
+- `not_run`: раздел не собран, правило исключено, объектов нет либо профиль неприменим/неподдерживаем. Это не успешная проверка.
 
-## Limitations
-No live collector, independent vendor support lookup, effective ACL computation, network packet tests, HGS attestation, backup vendor integration, signed evidence or proof of ransomware resilience. Configured backup does not replace a dated restore drill. Gen1/unsupported VM protection is not_run, and vTPM alone is insufficient for shielding. Review report coverage and limitations before acting on recommendations. Remediation text is never executed.
+По умолчанию `--fail-on none` возвращает 0 после успешной обработки даже при выявленных проблемах. `--fail-on fail` возвращает 1 при любом `fail`; `incomplete` возвращает 1 при `fail`/`unknown`/`not_run`. Некорректный ввод, аргументы или ошибка ввода-вывода дают код 2, без успешного отчета. Сообщения ошибок не содержат входных значений. При позднем сбое записи файл может остаться неполным: при коде 2 использовать его нельзя. `validate` проверяет структуру, не актуальность.
+
+## Ограничения
+
+Нет сборщика с Windows, независимой проверки поддержки производителем, вычисления эффективных ACL, сетевых испытаний, аттестации HGS, интеграции с поставщиками резервного копирования, подписанных данных или доказательства устойчивости к программам-вымогателям. Наличие копии не заменяет датированное восстановление. Защита Gen1/неподдерживаемых VM получает `not_run`; одного vTPM недостаточно для Shielded VM. Перед действиями по рекомендациям изучите покрытие и ограничения отчета. Рекомендации не исполняются.

@@ -1,13 +1,15 @@
-name: Offline auditor CI
+name: CI автономного аудитора
 on:
   push:
   pull_request:
   workflow_dispatch:
+env:
+  PYTHONUTF8: '1'
 permissions:
   contents: read
 jobs:
   offline:
-    name: Offline Python 3.12 (${{ matrix.os }})
+    name: Автономный Python 3.12 (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
